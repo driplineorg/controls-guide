@@ -13,6 +13,7 @@ Welcome to Dripline Controls Guide's documentation!
    first-mesh
    logging-data
    process-management
+   security
 
 
 Indices and tables
