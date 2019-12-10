@@ -77,6 +77,11 @@ pygments_style = None
 #
 html_theme = 'alabaster'
 
+html_theme_options = {
+  'fixed_sidebar': True,
+  'sidebar_collapse': True
+}
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
