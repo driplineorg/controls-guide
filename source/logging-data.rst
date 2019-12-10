@@ -39,7 +39,8 @@ The principles presented here has several benefits, keeping them in mind while p
 
 #. Sensors should be logged individually (that is, there should be independent records for each sensor for each time, so that that data is able to be fully consumed independently).
 
-#. Database storage should distinguish between storage of newly measured values, and derived values from existing measurements. The latter can be useful to log, but are different in nature.
+#. Database storage should distinguish between storage of newly measured values, and derived values from existing measurements.
+   The latter can be useful to log, but are different in nature.
 
 #. At least under SQL, the storage design should be driven by how one can "naturally" store the data, with enough context for building relations that exist.
    It is almost always a bad idea to design based on how the data will be consumed later (databases provide sophisticated query systems precisely for this purpose).
