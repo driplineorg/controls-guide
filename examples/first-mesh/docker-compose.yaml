@@ -7,3 +7,15 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=dripline
       - RABBITMQ_DEFAULT_PASS=dripline
+
+  key-value-store:
+    image: driplineorg/dripline-python:develop_dl3-amd64
+    depends_on:
+      - rabbit-broker
+    volumes:
+      - ./authentications.json:/root/authentications.json
+      - ./key-value-store.yaml:/root/key-value-store.yaml
+    command:
+      - dl-serve
+      - -c
+      - /root/key-value-store.yaml

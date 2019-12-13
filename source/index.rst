@@ -10,7 +10,7 @@ Welcome to Dripline Controls Guide's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   first-mesh
+   guides/guides
    logging-data
    process-management
    security

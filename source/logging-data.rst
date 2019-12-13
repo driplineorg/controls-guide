@@ -1,3 +1,5 @@
+.. _logging-data:
+
 Logging Data
 ============
 
