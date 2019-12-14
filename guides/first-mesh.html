@@ -1,0 +1,337 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>First Mesh Walkthrough &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/dripline_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python Plugin" href="python-plugin.html" />
+    <link rel="prev" title="Tutorials" href="guides.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/dripline_favicon.ico" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">First Mesh Walkthrough</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-plugin.html">Python Plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../logging-data.html">Logging Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../process-management.html">Process Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="guides.html">Tutorials</a><ul>
+      <li>Previous: <a href="guides.html" title="previous chapter">Tutorials</a></li>
+      <li>Next: <a href="python-plugin.html" title="next chapter">Python Plugin</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="first-mesh-walkthrough">
+<h1>First Mesh Walkthrough<a class="headerlink" href="#first-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
+<p>In this walkthrough, we will go through the process of creating a new and fairly minimal slow controls system.
+We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.</p>
+<p>Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
+In this example, we will use <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> to define and deploy our collection of applications.
+If you’re not familiar with compose, please review the <a class="reference external" href="https://docs.docker.com/compose/gettingstarted/">official documentation</a> and work through the examples there.
+You should also be familiar with <a class="reference external" href="https://docs.docker.com/compose/reference/exec/">exec</a> and <a class="reference external" href="https://docs.docker.com/compose/reference/logs/">logs</a> subcommands, all of these will be useful throughout this guide.</p>
+<p>If you are working through this walkthrough, you’re strongly encouraged to create a directory and write all of the files yourself, exploring the options or configurable parameters, etc.
+For reference, you can find a completed set of files for this example in the <a class="reference external" href="https://github.com/driplineorg/controls-guide/tree/master/examples/first-mesh">github repo for this documentation</a>.</p>
+<div class="section" id="configure-the-message-broker">
+<h2>Configure the message broker<a class="headerlink" href="#configure-the-message-broker" title="Permalink to this headline">¶</a></h2>
+<p>The core to any dripline mesh is the AMQP message broker.
+In principle, dripline-compliant messages could be sent over any transport protocol you want, but in practice all available libraries are written for, and tested with AMQP (specifically RabbitMQ), so you should probably just use that.
+We’ll set the username and password for the default role in RabbitMQ, to be used by all of our services.
+In principle, RabbitMQ provides interesting and sophisticated role-based access controls features which could be leveraged, but this is not currently done.
+This is done with the following service block in the docker-compose file:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">services</span><span class="p">:</span>
+
+  <span class="nt">rabbit-broker</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rabbitmq:3-management</span>
+    <span class="nt">environment</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">RABBITMQ_DEFAULT_USER=dripline</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">RABBITMQ_DEFAULT_PASS=dripline</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>In order for services to connect to the broker, they will need to authenticate using the username and password indicated above.
+The dripline libraries typically retrieve this information from an authentications file, we’ll go ahead and create that now:</p>
+<div class="literal-block-wrapper docutils container" id="authentications-file">
+<div class="code-block-caption"><span class="caption-text">authentications.json</span><a class="headerlink" href="#authentications-file" title="Permalink to this code">¶</a></div>
+<div class="highlight-json notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;amqp&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;broker&quot;</span><span class="p">:</span> <span class="s2">&quot;rabbit-broker&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;dripline&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;dripline&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+<div class="section" id="add-a-dripline-service">
+<h2>Add a dripline service<a class="headerlink" href="#add-a-dripline-service" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have a broker running, we will go ahead and create our first dripline service.
+We won’t do anythng fancy, we’ll use the built-in <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class to create some endpoints which simply remember a value and report it back.
+In a more realistic use-case, the remembered value may be replaced by an interaction with some hardware, but this is nice because it runs without requiring equipment, and still demonstrates the interactions between the software components.</p>
+<div class="section" id="the-compose-entry">
+<h3>The compose entry<a class="headerlink" href="#the-compose-entry" title="Permalink to this headline">¶</a></h3>
+<p>To create our dripline service, we add another object to the docker-compose definition file (under the <code class="docutils literal notranslate"><span class="pre">service:</span></code> block) that looks like the following:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="nt">key-value-store</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">driplineorg/dripline-python:develop_dl3-amd64</span>
+    <span class="nt">depends_on</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">rabbit-broker</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./authentications.json:/root/authentications.json</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./key-value-store.yaml:/root/key-value-store.yaml</span>
+    <span class="nt">command</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dl-serve</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">-c</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/root/key-value-store.yaml</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Here we’re running a container with two files mounted in, the authentications file from the previous section, and a runtime configuration file to be discussed next.
+We also specify the command to run in the container (review the docker compose documentation linked above if you need help understanding the syntax).</p>
+</div>
+<div class="section" id="the-runtime-configuration-file">
+<h3>The runtime configuration file<a class="headerlink" href="#the-runtime-configuration-file" title="Permalink to this headline">¶</a></h3>
+<p>The configuration file is used to define the classes which need to be created to do the work of the service.
+The file lists those, including the configurable parameters that are passed to the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> functions for those classes.
+If you’re ever not sure what configurable parameters a class takes, you can check that function definition in the class and its base classes.</p>
+<p>There are several important patterns for a runtime configuration file:</p>
+<ol class="arabic simple">
+<li>The description of classes goes in a section of the yaml file named <code class="docutils literal notranslate"><span class="pre">runtime-config</span></code></li>
+<li>Every class is a dictionary block, with the required keys <code class="docutils literal notranslate"><span class="pre">name</span></code> (uniquely naming the instance) and <code class="docutils literal notranslate"><span class="pre">module</span></code> (naming the class)</li>
+<li>A class may include a <code class="docutils literal notranslate"><span class="pre">module_path</span></code> key, which indicates the path to a python source file implementing that class</li>
+<li>The top-level of the runtime-config should have a class which is either a <code class="docutils literal notranslate"><span class="pre">Service</span></code> or a class derived from it, this class is responsible for connecting to AMQP and sending and receiving dripline messsages.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">Service</span></code> may have an <code class="docutils literal notranslate"><span class="pre">endpoints</span></code> key which contains a list of dictionary blocks defining other class instances</li>
+</ol>
+<p>In this case, our key-value storage service has a vanilla <code class="docutils literal notranslate"><span class="pre">Service</span></code> for consuming messages, and three endpoints for storing values.
+Taking the “peaches” endpoint as an example, we see that we’re creating an instance of the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class and “peaches” is its name.
+We’re passing in an <code class="docutils literal notranslate"><span class="pre">initial_value</span></code> (defined in the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class itself), <code class="docutils literal notranslate"><span class="pre">get_on_set</span></code>, <code class="docutils literal notranslate"><span class="pre">log_on_set</span></code>, and <code class="docutils literal notranslate"><span class="pre">log_interval</span></code> (from the <code class="docutils literal notranslate"><span class="pre">Entity</span></code> base class), and <code class="docutils literal notranslate"><span class="pre">calibration</span></code> (from the <code class="docutils literal notranslate"><span class="pre">Endpoint</span></code> base class inherited through <code class="docutils literal notranslate"><span class="pre">Entity</span></code>).
+Any other arguments those classes take in their <code class="docutils literal notranslate"><span class="pre">__init__</span></code> are being left at the default values.
+The full configuration looks like:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">key-value-store.yaml</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">runtime-config</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my_store</span>
+  <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Service</span>
+  <span class="nt">auth_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/root/authentications.json</span>
+  <span class="nt">endpoints</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">peaches</span>
+          <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeyValueStore</span>
+          <span class="nt">calibration</span><span class="p">:</span> <span class="s">&#39;2*{}&#39;</span>
+          <span class="nt">initial_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.75</span>
+          <span class="nt">log_interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+          <span class="nt">get_on_set</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+          <span class="nt">log_on_set</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chips</span>
+          <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeyValueStore</span>
+          <span class="nt">calibration</span><span class="p">:</span> <span class="s">&#39;times3({})&#39;</span>
+          <span class="nt">initial_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.75</span>
+        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">waffles</span>
+          <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeyValueStore</span>
+          <span class="c1">#log_interval: 30</span>
+          <span class="c1">#log_on_set: True</span>
+          <span class="nt">calibration</span><span class="p">:</span> <span class="s">&#39;1.*{}&#39;</span>
+          <span class="nt">initial_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4.00</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+<div class="section" id="running-and-interacting">
+<h3>Running and interacting<a class="headerlink" href="#running-and-interacting" title="Permalink to this headline">¶</a></h3>
+<p>Having create the runtime configuration and added it to the compose environment, bring the the compose environment up to launch your containers.
+Probably the best option is to bring it up in daemon mode (with <code class="docutils literal notranslate"><span class="pre">-d</span></code>), but that’s up to you; I typically launch as a daemon, then use the <code class="docutils literal notranslate"><span class="pre">logs</span></code> subcommand with <code class="docutils literal notranslate"><span class="pre">-f</span></code> to follow the activity of any service I’m actively trying to debug.
+If you do this, you should see new output every 10 seconds when the peaches endpoints logs a new value (per the configured <code class="docutils literal notranslate"><span class="pre">log_interval</span></code> value).</p>
+<p>With that working, use the <code class="docutils literal notranslate"><span class="pre">exec</span></code> subcommand to run a second bash shell in the key-value-store container.
+From here, we’ll use the command line interface to interact with our new service (note that you can use the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag with any of these tools to find out about the full set of available options).</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">dl-mon</span></code> command (from <code class="docutils literal notranslate"><span class="pre">dripline-cpp</span></code> to watch the logs).
+The full command could be <code class="docutils literal notranslate"><span class="pre">dl-mon</span> <span class="pre">--auth-file</span> <span class="pre">/root/authentications.json</span> <span class="pre">-b</span> <span class="pre">rabbit-broker</span> <span class="pre">-a</span> <span class="pre">sensor_value.#</span></code>.
+You could similarly bind to <code class="docutils literal notranslate"><span class="pre">heartbeat.#</span></code> to see the regular heartbeat messages from all running services (for now we just have the one).</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">dl-agent</span></code> command to interact with an endpoint.
+First, we’ll check the current value of the peaches endpoing, with <code class="docutils literal notranslate"><span class="pre">dl-agent</span> <span class="pre">--auth-file</span> <span class="pre">/root/authentications.json</span> <span class="pre">-b</span> <span class="pre">rabbit-broker</span> <span class="pre">get</span> <span class="pre">peaches</span></code>.
+You should see a verbose output that includes a payload section with the current value.
+Now try to use the <code class="docutils literal notranslate"><span class="pre">set</span></code> subcommand to change the value and get it again, you should see your new value.
+You should also see that a new value gets logged whenever you use <code class="docutils literal notranslate"><span class="pre">set</span></code>, and that time-based logs have your newly assinged value.</p>
+</div>
+</div>
+<div class="section" id="add-historical-data-storage">
+<h2>Add historical data storage<a class="headerlink" href="#add-historical-data-storage" title="Permalink to this headline">¶</a></h2>
+<p>This has all been nice for allowing us to interact with the key-value-store service.
+Hopefully you can see that if instead of the trivial implementations of the <code class="docutils literal notranslate"><span class="pre">on_get</span></code> and <code class="docutils literal notranslate"><span class="pre">on_set</span></code> methods in the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class, we could implement those methods with arbitrarily complex logic and still interact with them in the same way.
+For this tutorial however, we set aside the question of implementing more complex interactions with hardware and focus back on software issues.
+In particular, as built we have a way to find out what the current value of peaches is, but not what it has been.
+Normally we want to catch the value logs produced and record them in a database or other long-term storage system so that they can be referenced or processed later.</p>
+<p>The details of the logging system are discussed in the <a class="reference internal" href="../logging-data.html#logging-data"><span class="std std-ref">logging system</span></a> section so here we jump ahead with spinning it up.</p>
+<div class="section" id="todo-notes">
+<h3>ToDo Notes:<a class="headerlink" href="#todo-notes" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Create a postgres service in the compose (with volume &amp; initialization directory)</li>
+<li>Create an <code class="docutils literal notranslate"><span class="pre">endpoint_id_map</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoints_logs_double</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoint_values</span></code> view</li>
+<li><em>Stretch:</em> Add a view that combines data types and resolves inserts to the correct tables.</li>
+<li>Create a sensor-logger service to record sensor values into the above</li>
+<li>can we just enable and use annonymous access (and add a comment on the lack of security)?</li>
+</ol>
+</div>
+</div>
+<div class="section" id="add-historical-data-visualizer">
+<h2>Add historical data visualizer<a class="headerlink" href="#add-historical-data-visualizer" title="Permalink to this headline">¶</a></h2>
+<p>If historical storage of data is out-of-scope for dripline, then visualization of historical data is obviously more so.
+Nevertheless, a control system is not very useful unless it is easy to quickly view and understand the information being collected.
+For most use cases, we recommend leveraging third-party, open-source, solutions, as they tend to be much easier to manage and much more powerful than custom solutions (unless you have significant human resources to throw at the problem).
+Here, we use <a class="reference external" href="https://grafana.com">grafana</a></p>
+<div class="section" id="id1">
+<h3>ToDo Notes:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Create a grafana service<ol class="arabic">
+<li>configure to enable anyonmyous login? (or simple/default user/password)</li>
+<li>configure provisioning for datasource pointing to postgres above</li>
+</ol>
+</li>
+<li>Go through interactively creating a dashboard to plot one sensor’s time series &amp; a table of aggregate values
+#. Export and add the dashboard to the provisioning system</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2019, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/guides/first-mesh.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

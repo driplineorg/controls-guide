@@ -1,0 +1,222 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>First Mesh Walkthrough &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/dripline_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Logging Data" href="logging-data.html" />
+    <link rel="prev" title="Welcome to Dripline Controls Guide’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/dripline_favicon.ico" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">First Mesh Walkthrough</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configure-the-message-broker">Configure the message broker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-a-dripline-service">Add a dripline service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-historical-data-storage">Add historical data storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-historical-data-visualizer">Add historical data visualizer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logging-data.html">Logging Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-management.html">Process Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Dripline Controls Guide’s documentation!</a></li>
+      <li>Next: <a href="logging-data.html" title="next chapter">Logging Data</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="first-mesh-walkthrough">
+<h1>First Mesh Walkthrough<a class="headerlink" href="#first-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
+<p>In this walkthrough, we will go through the process of creating a new and fairly minimal slow controls system.
+We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.</p>
+<p>Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
+In this example, we will use <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> to define and deploy our collection of applications.
+If you’re not familiar with compose, please review the <a class="reference external" href="https://docs.docker.com/compose/gettingstarted/">official documentation</a> and work through the examples there.
+You should also be familiar with <a class="reference external" href="https://docs.docker.com/compose/reference/exec/">exec</a> and <a class="reference external" href="https://docs.docker.com/compose/reference/logs/">logs</a> subcommands, all of these will be useful throughout this guide.</p>
+<p>If you are working through this walkthrough, you’re strongly encouraged to create a directory and write all of the files yourself, exploring the options or configurable parameters, etc.
+For reference, you can find a completed set of files for this example in the <a class="reference external" href="https://github.com/driplineorg/controls-guide/tree/master/examples/first-mesh">github repo for this documentation</a>.</p>
+<div class="section" id="configure-the-message-broker">
+<h2>Configure the message broker<a class="headerlink" href="#configure-the-message-broker" title="Permalink to this headline">¶</a></h2>
+<p>The core to any dripline mesh is the AMQP message broker.
+In principle, dripline-compliant messages could be sent over any transport protocol you want, but in practice all available libraries are written for, and tested with AMQP (specifically RabbitMQ), so you should probably just use that.
+We’ll set the username and password for the default role in RabbitMQ, to be used by all of our services.
+In principle, RabbitMQ provides interesting and sophisticated role-based access controls features which could be leveraged, but this is not currently done.
+This is done with the following service block in the docker-compose file:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">services</span><span class="p">:</span>
+
+  <span class="nt">rabbit-broker</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rabbitmq:3-management</span>
+    <span class="nt">environment</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">RABBITMQ_DEFAULT_USER=dripline</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">RABBITMQ_DEFAULT_PASS=dripline</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>In order for services to connect to the broker, they will need to authenticate using the username and password indicated above.
+The dripline libraries typically retrieve this information from an authentications file, we’ll go ahead and create that now:</p>
+<div class="literal-block-wrapper docutils container" id="authentications-file">
+<div class="code-block-caption"><span class="caption-text">authentications.json</span><a class="headerlink" href="#authentications-file" title="Permalink to this code">¶</a></div>
+<div class="highlight-json notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;amqp&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;broker&quot;</span><span class="p">:</span> <span class="s2">&quot;rabbit-broker&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;dripline&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;dripline&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+<div class="section" id="add-a-dripline-service">
+<h2>Add a dripline service<a class="headerlink" href="#add-a-dripline-service" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have a broker running, we will go ahead and create our first service.</p>
+<div class="section" id="todo-notes">
+<h3>ToDo Notes:<a class="headerlink" href="#todo-notes" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Add content for a very simple service, probably our classic key-value store thing</li>
+<li>Demo that you can get and set it using exec</li>
+<li>Demo that you can see sensor logs with dl-monitor</li>
+</ol>
+</div>
+</div>
+<div class="section" id="add-historical-data-storage">
+<h2>Add historical data storage<a class="headerlink" href="#add-historical-data-storage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>ToDo Notes:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Create a postgres service in the compose (with volume &amp; initialization directory)</li>
+<li>Create an <code class="docutils literal notranslate"><span class="pre">endpoint_id_map</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoints_logs_double</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoint_values</span></code> view</li>
+<li><em>Stretch:</em> Add a view that combines data types and resolves inserts to the correct tables.</li>
+<li>Create a sensor-logger service to record sensor values into the above</li>
+<li>can we just enable and use annonymous access (and add a comment on the lack of security)?</li>
+</ol>
+</div>
+</div>
+<div class="section" id="add-historical-data-visualizer">
+<h2>Add historical data visualizer<a class="headerlink" href="#add-historical-data-visualizer" title="Permalink to this headline">¶</a></h2>
+<p>If historical storage of data is out-of-scope for dripline, then visualization of historical data is obviously more so.
+Nevertheless, a control system is not very useful unless it is easy to quickly view and understand the information being collected.
+For most use cases, we recommend leveraging third-party, open-source, solutions, as they tend to be much easier to manage and much more powerful than custom solutions (unless you have significant human resources to throw at the problem).
+Here, we use <a class="reference external" href="https://grafana.com">grafana</a></p>
+<div class="section" id="id2">
+<h3>ToDo Notes:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Create a grafana service<ol class="arabic">
+<li>configure to enable anyonmyous login? (or simple/default user/password)</li>
+<li>configure provisioning for datasource pointing to postgres above</li>
+</ol>
+</li>
+<li>Go through interactively creating a dashboard to plot one sensor’s time series &amp; a table of aggregate values
+#. Export and add the dashboard to the provisioning system</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2019, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/first-mesh.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
