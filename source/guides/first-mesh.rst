@@ -118,6 +118,11 @@ Normally we want to catch the value logs produced and record them in a database 
 
 The details of the logging system are discussed in the :ref:`logging system <logging-data>` section so here we jump ahead with spinning it up.
 
+... the logging code has not yet been ported from dripline v2 to v3.
+The very-brief overview of how it works is that it listens to messages similar to what was done with ``dl-mon`` in the prior section.
+When a message is received, it unpacks the message's payload data and uses that to insert a new record into the database.
+Our example adds data to postgres, but one could construct a similar system for logging to other databases.
+
 ToDo Notes:
 +++++++++++
 
@@ -133,7 +138,9 @@ Add historical data visualizer
 If historical storage of data is out-of-scope for dripline, then visualization of historical data is obviously more so.
 Nevertheless, a control system is not very useful unless it is easy to quickly view and understand the information being collected.
 For most use cases, we recommend leveraging third-party, open-source, solutions, as they tend to be much easier to manage and much more powerful than custom solutions (unless you have significant human resources to throw at the problem).
-Here, we use `grafana <https://grafana.com>`_
+Here, we use `grafana <https://grafana.com>`_.
+It makes it easy to query a large number of data sources, including postgreSQL as configured in the previous section.
+It supports many visualizations (plots, tables, etc.), as well as setting alarm conditions (such as value out of bounds) and even external alarm integrations (such as sending messages to slack).
 
 ToDo Notes:
 +++++++++++
