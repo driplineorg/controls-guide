@@ -47,7 +47,7 @@ In a more realistic use-case, the remembered value may be replaced by an interac
 The compose entry
 +++++++++++++++++
 
-To create our dripline service, we add another object to the docker-compose definition file (under the ``service:`` block) that looks like the following:
+To create our dripline service, we add another object to the docker-compose definition file (under the ``services:`` block) that looks like the following:
 
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
    :caption: docker-compose.yaml
