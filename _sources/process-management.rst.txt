@@ -1,3 +1,5 @@
+.. _process-management:
+
 Process Management
 ==================
 
@@ -21,7 +23,8 @@ Similarly, the process execution could be done in an interactive shell, as a bac
 
 In most dripline applications, software is deployed in docker containers (this is also the environment where we develop and test the software); you are encouraged to review the official documentation for docker (specifically, the Dockerfile and the docker command line tool).
 Further, we typically deploy containers in one of two ways:
-1. A docker-compose orchestration is convenient when working with a single host and a single user.
+
+#. A docker-compose orchestration is convenient when working with a single host and a single user.
    This is a great way to work when doing development and prototyping, and when systems do not need to run for extended periods of time.
-2. On production systems, we deploy using kubernetes.
+#. On production systems, we deploy using kubernetes.
    This requires an additional step of provisioning a kubernetes cluster, but has the advantage that it leverages the entire ecosystem of cloud-based computing developers and technologies (providing process monitoring and restart, node health monitoring, upgrade and rollbacks, node migration, etc.).

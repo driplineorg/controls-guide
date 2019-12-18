@@ -1,3 +1,5 @@
+.. _python-plugin:
+
 Python Plugin
 -------------
 

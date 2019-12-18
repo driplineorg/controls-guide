@@ -16,6 +16,11 @@ Welcome to Dripline Controls Guide's documentation!
    security
 
 
+.. toctree::
+   :hidden:
+
+   command-line-tools
+
 Indices and tables
 ==================
 

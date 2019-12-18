@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>First Mesh Walkthrough &#8212; Dripline Controls Guide  documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -67,13 +65,11 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -96,9 +92,13 @@
             
   <div class="section" id="first-mesh-walkthrough">
 <h1>First Mesh Walkthrough<a class="headerlink" href="#first-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
-<p>In this walkthrough, we will go through the process of creating a new and fairly minimal slow controls system.
+<p>In this walkthrough, we will go through the process of creating your first dripline mesh.
+A “mesh” refers to an AMQP message broker and all of the services which are connected to it.
+In most cases, this is the same as the controls for a particular system.
+Here we will create a very simple mesh including a broker for communication, a trivial service (which can be thought of as representing a simple instrument), and logging service along with both a third party database and database dashboarding tool (for storing and displaying historical data).
 We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.</p>
 <p>Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
+There is more discussion in the section on <a class="reference internal" href="../process-management.html#process-management"><span class="std std-ref">process management</span></a>.
 In this example, we will use <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> to define and deploy our collection of applications.
 If you’re not familiar with compose, please review the <a class="reference external" href="https://docs.docker.com/compose/gettingstarted/">official documentation</a> and work through the examples there.
 You should also be familiar with <a class="reference external" href="https://docs.docker.com/compose/reference/exec/">exec</a> and <a class="reference external" href="https://docs.docker.com/compose/reference/logs/">logs</a> subcommands, all of these will be useful throughout this guide.</p>
@@ -157,7 +157,7 @@ We won’t do anythng fancy, we’ll use the built-in <code class="docutils lite
 In a more realistic use-case, the remembered value may be replaced by an interaction with some hardware, but this is nice because it runs without requiring equipment, and still demonstrates the interactions between the software components.</p>
 <div class="section" id="the-compose-entry">
 <h3>The compose entry<a class="headerlink" href="#the-compose-entry" title="Permalink to this headline">¶</a></h3>
-<p>To create our dripline service, we add another object to the docker-compose definition file (under the <code class="docutils literal notranslate"><span class="pre">service:</span></code> block) that looks like the following:</p>
+<p>To create our dripline service, we add another object to the docker-compose definition file (under the <code class="docutils literal notranslate"><span class="pre">services:</span></code> block) that looks like the following:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>11
@@ -194,11 +194,11 @@ The file lists those, including the configurable parameters that are passed to t
 If you’re ever not sure what configurable parameters a class takes, you can check that function definition in the class and its base classes.</p>
 <p>There are several important patterns for a runtime configuration file:</p>
 <ol class="arabic simple">
-<li>The description of classes goes in a section of the yaml file named <code class="docutils literal notranslate"><span class="pre">runtime-config</span></code></li>
-<li>Every class is a dictionary block, with the required keys <code class="docutils literal notranslate"><span class="pre">name</span></code> (uniquely naming the instance) and <code class="docutils literal notranslate"><span class="pre">module</span></code> (naming the class)</li>
-<li>A class may include a <code class="docutils literal notranslate"><span class="pre">module_path</span></code> key, which indicates the path to a python source file implementing that class</li>
-<li>The top-level of the runtime-config should have a class which is either a <code class="docutils literal notranslate"><span class="pre">Service</span></code> or a class derived from it, this class is responsible for connecting to AMQP and sending and receiving dripline messsages.</li>
-<li>The <code class="docutils literal notranslate"><span class="pre">Service</span></code> may have an <code class="docutils literal notranslate"><span class="pre">endpoints</span></code> key which contains a list of dictionary blocks defining other class instances</li>
+<li><p>The description of classes goes in a section of the yaml file named <code class="docutils literal notranslate"><span class="pre">runtime-config</span></code></p></li>
+<li><p>Every class is a dictionary block, with the required keys <code class="docutils literal notranslate"><span class="pre">name</span></code> (uniquely naming the instance) and <code class="docutils literal notranslate"><span class="pre">module</span></code> (naming the class)</p></li>
+<li><p>A class may include a <code class="docutils literal notranslate"><span class="pre">module_path</span></code> key, which indicates the path to a python source file implementing that class</p></li>
+<li><p>The top-level of the runtime-config should have a class which is either a <code class="docutils literal notranslate"><span class="pre">Service</span></code> or a class derived from it, this class is responsible for connecting to AMQP and sending and receiving dripline messsages.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Service</span></code> may have an <code class="docutils literal notranslate"><span class="pre">endpoints</span></code> key which contains a list of dictionary blocks defining other class instances</p></li>
 </ol>
 <p>In this case, our key-value storage service has a vanilla <code class="docutils literal notranslate"><span class="pre">Service</span></code> for consuming messages, and three endpoints for storing values.
 Taking the “peaches” endpoint as an example, we see that we’re creating an instance of the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class and “peaches” is its name.
@@ -279,14 +279,18 @@ For this tutorial however, we set aside the question of implementing more comple
 In particular, as built we have a way to find out what the current value of peaches is, but not what it has been.
 Normally we want to catch the value logs produced and record them in a database or other long-term storage system so that they can be referenced or processed later.</p>
 <p>The details of the logging system are discussed in the <a class="reference internal" href="../logging-data.html#logging-data"><span class="std std-ref">logging system</span></a> section so here we jump ahead with spinning it up.</p>
+<p>… the logging code has not yet been ported from dripline v2 to v3.
+The very-brief overview of how it works is that it listens to messages similar to what was done with <code class="docutils literal notranslate"><span class="pre">dl-mon</span></code> in the prior section.
+When a message is received, it unpacks the message’s payload data and uses that to insert a new record into the database.
+Our example adds data to postgres, but one could construct a similar system for logging to other databases.</p>
 <div class="section" id="todo-notes">
 <h3>ToDo Notes:<a class="headerlink" href="#todo-notes" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li>Create a postgres service in the compose (with volume &amp; initialization directory)</li>
-<li>Create an <code class="docutils literal notranslate"><span class="pre">endpoint_id_map</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoints_logs_double</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoint_values</span></code> view</li>
-<li><em>Stretch:</em> Add a view that combines data types and resolves inserts to the correct tables.</li>
-<li>Create a sensor-logger service to record sensor values into the above</li>
-<li>can we just enable and use annonymous access (and add a comment on the lack of security)?</li>
+<li><p>Create a postgres service in the compose (with volume &amp; initialization directory)</p></li>
+<li><p>Create an <code class="docutils literal notranslate"><span class="pre">endpoint_id_map</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoints_logs_double</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoint_values</span></code> view</p></li>
+<li><p><em>Stretch:</em> Add a view that combines data types and resolves inserts to the correct tables.</p></li>
+<li><p>Create a sensor-logger service to record sensor values into the above</p></li>
+<li><p>can we just enable and use annonymous access (and add a comment on the lack of security)?</p></li>
 </ol>
 </div>
 </div>
@@ -295,17 +299,20 @@ Normally we want to catch the value logs produced and record them in a database 
 <p>If historical storage of data is out-of-scope for dripline, then visualization of historical data is obviously more so.
 Nevertheless, a control system is not very useful unless it is easy to quickly view and understand the information being collected.
 For most use cases, we recommend leveraging third-party, open-source, solutions, as they tend to be much easier to manage and much more powerful than custom solutions (unless you have significant human resources to throw at the problem).
-Here, we use <a class="reference external" href="https://grafana.com">grafana</a></p>
+Here, we use <a class="reference external" href="https://grafana.com">grafana</a>.
+It makes it easy to query a large number of data sources, including postgreSQL as configured in the previous section.
+It supports many visualizations (plots, tables, etc.), as well as setting alarm conditions (such as value out of bounds) and even external alarm integrations (such as sending messages to slack).</p>
 <div class="section" id="id1">
 <h3>ToDo Notes:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li>Create a grafana service<ol class="arabic">
-<li>configure to enable anyonmyous login? (or simple/default user/password)</li>
-<li>configure provisioning for datasource pointing to postgres above</li>
+<li><p>Create a grafana service</p>
+<ol class="arabic simple">
+<li><p>configure to enable anyonmyous login? (or simple/default user/password)</p></li>
+<li><p>configure provisioning for datasource pointing to postgres above</p></li>
 </ol>
 </li>
-<li>Go through interactively creating a dashboard to plot one sensor’s time series &amp; a table of aggregate values
-#. Export and add the dashboard to the provisioning system</li>
+<li><p>Go through interactively creating a dashboard to plot one sensor’s time series &amp; a table of aggregate values
+#. Export and add the dashboard to the provisioning system</p></li>
 </ol>
 </div>
 </div>
@@ -322,7 +329,7 @@ Here, we use <a class="reference external" href="https://grafana.com">grafana</a
       &copy;2019, Driplineorg Maintainers.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
