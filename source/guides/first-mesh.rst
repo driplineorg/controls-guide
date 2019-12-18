@@ -1,9 +1,13 @@
 First Mesh Walkthrough
 ======================
-In this walkthrough, we will go through the process of creating a new and fairly minimal slow controls system.
+In this walkthrough, we will go through the process of creating your first dripline mesh.
+A "mesh" refers to an AMQP message broker and all of the services which are connected to it.
+In most cases, this is the same as the controls for a particular system.
+Here we will create a very simple mesh including a broker for communication, a trivial service (which can be thought of as representing a simple instrument), and logging service along with both a third party database and database dashboarding tool (for storing and displaying historical data).
 We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.
 
 Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
+There is more discussion in the section on :ref:`process management<process-management>`.
 In this example, we will use ``docker-compose`` to define and deploy our collection of applications.
 If you're not familiar with compose, please review the `official documentation <https://docs.docker.com/compose/gettingstarted/>`_ and work through the examples there.
 You should also be familiar with `exec <https://docs.docker.com/compose/reference/exec/>`_ and `logs <https://docs.docker.com/compose/reference/logs/>`_ subcommands, all of these will be useful throughout this guide.
