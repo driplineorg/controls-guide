@@ -1,9 +1,11 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Logging Data &#8212; Dripline Controls Guide  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -53,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="process-management.html">Process Management</a></li>
 <li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command-line-tools.html">Command Line Tools</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -64,11 +69,13 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -99,9 +106,11 @@ Services are generally designed to be self contained and largely stateless; but 
 This is achieved by sending messages on the <cite>alerts</cite> exchange.
 Each message’s routing key indicates the general type of the data (first word in the routing key) and the specific name for the data (second word in the routing key, often the same as the name of the endpoint sending the data).
 For objects one would consider a “sensor” to store scalar values at a regular interval, the existing <cite>Entity</cite> class can be used and takes care of internal timing, as well as providing some logic for non-uniform sampling.
-Other common patterns would be:
-* a service which produces an alert message as part of the logic resulting from a received command
-* a service which consumes alert messages and produces new alerts messages based on them (logging derived values or converting raw alerts to a log-system compatible form)</p>
+Other common patterns would be:</p>
+<ul class="simple">
+<li>a service which produces an alert message as part of the logic resulting from a received command</li>
+<li>a service which consumes alert messages and produces new alerts messages based on them (logging derived values or converting raw alerts to a log-system compatible form)</li>
+</ul>
 </div>
 <div class="section" id="storage-backends">
 <h2>Storage Backends<a class="headerlink" href="#storage-backends" title="Permalink to this headline">¶</a></h2>
@@ -112,23 +121,21 @@ Most of our existing systems make use postgreSQL, but a service which receives a
 <h2>Design Benefits and Concepts<a class="headerlink" href="#design-benefits-and-concepts" title="Permalink to this headline">¶</a></h2>
 <p>The principles presented here has several benefits, keeping them in mind while putting together a specific system can make life easier as new features are required.</p>
 <ol class="arabic simple">
-<li><p>Separate out the logging process means that it is easy to have multiple consumers in parallel without them impacting each other</p>
-<ol class="arabic simple">
-<li><p>This allows testing new databases, database version upgrades, etc., without disrupting the working/production system.</p></li>
-<li><p>This allows other services to listen for and respond to new values without needing to interact with the database.</p></li>
+<li>Separate out the logging process means that it is easy to have multiple consumers in parallel without them impacting each other<ol class="arabic">
+<li>This allows testing new databases, database version upgrades, etc., without disrupting the working/production system.</li>
+<li>This allows other services to listen for and respond to new values without needing to interact with the database.</li>
 </ol>
 </li>
-<li><p>Have a few, but specialized, database-injection services.</p>
-<ol class="arabic simple">
-<li><p>Often these are isolated to the type of data they consume (since this may impact where/how they inject the data).</p></li>
-<li><p>This service is a place for potential scaling (either database ingestion rate or message processing rate).</p></li>
+<li>Have a few, but specialized, database-injection services.<ol class="arabic">
+<li>Often these are isolated to the type of data they consume (since this may impact where/how they inject the data).</li>
+<li>This service is a place for potential scaling (either database ingestion rate or message processing rate).</li>
 </ol>
 </li>
-<li><p>Sensors should be logged individually (that is, there should be independent records for each sensor for each time, so that that data is able to be fully consumed independently).</p></li>
-<li><p>Database storage should distinguish between storage of newly measured values, and derived values from existing measurements.
-The latter can be useful to log, but are different in nature.</p></li>
-<li><p>At least under SQL, the storage design should be driven by how one can “naturally” store the data, with enough context for building relations that exist.
-It is almost always a bad idea to design based on how the data will be consumed later (databases provide sophisticated query systems precisely for this purpose).</p></li>
+<li>Sensors should be logged individually (that is, there should be independent records for each sensor for each time, so that that data is able to be fully consumed independently).</li>
+<li>Database storage should distinguish between storage of newly measured values, and derived values from existing measurements.
+The latter can be useful to log, but are different in nature.</li>
+<li>At least under SQL, the storage design should be driven by how one can “naturally” store the data, with enough context for building relations that exist.
+It is almost always a bad idea to design based on how the data will be consumed later (databases provide sophisticated query systems precisely for this purpose).</li>
 </ol>
 </div>
 </div>
@@ -144,7 +151,7 @@ It is almost always a bad idea to design based on how the data will be consumed 
       &copy;2019, Driplineorg Maintainers.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
