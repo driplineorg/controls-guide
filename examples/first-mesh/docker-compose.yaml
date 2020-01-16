@@ -9,7 +9,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=dripline
 
   key-value-store:
-    image: driplineorg/dripline-python:develop_dl3-amd64
+    image: driplineorg/dripline-python:v4.0.0
     depends_on:
       - rabbit-broker
     volumes:
