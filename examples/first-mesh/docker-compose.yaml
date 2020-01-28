@@ -35,3 +35,7 @@ services:
       - -a
       - \#
 
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - ./postgres_init.d:/docker-entrypoint-initdb.d

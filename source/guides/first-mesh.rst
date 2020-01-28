@@ -97,6 +97,12 @@ Having create the runtime configuration and added it to the compose environment,
 Probably the best option is to bring it up in daemon mode (with ``-d``), but that's up to you; I typically launch as a daemon, then use the ``logs`` subcommand with ``-f`` to follow the activity of any service I'm actively trying to debug.
 If you do this, you should see new output every 10 seconds when the peaches endpoints logs a new value (per the configured ``log_interval`` value).
 
+.. note::
+  The docker-compose utility does not do sophisticated lifecycle management.
+  Of particular relevance here, the ``depends_on`` label only indicates the order that containers should be started, it does not wait for anythign to be "ready" before moving on.
+  It is very common that, when starting from a new or fully stopped system, RabbitMQ takes some time to start and other services fail to connect to it.
+  The simplest solution is to simply bring everything up again, you could instead try to add sleep or automatic restart statements to deal with this automatically, but that comes with its own subtleties and is probably an indication that you should consider more sophisticated orchestration (such as k8s).
+
 With that working, use the ``exec`` subcommand to run a second bash shell in the key-value-store container.
 From here, we'll use the command line interface to interact with our new service (note that you can use the ``--help`` flag with any of these tools to find out about the full set of available options).
 
