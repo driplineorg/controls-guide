@@ -1,7 +1,7 @@
 runtime-config:
   name: sensor_data_logger
   module: PostgresSensorLogger
-  auth_file: /root/auths.json
+  auth_file: /root/authentications.json
   # SensorLogger Inits
   insertion_table_endpoint_name: values_table
   # AlertConsumer Inits
@@ -11,7 +11,7 @@ runtime-config:
   # PostgreSQLInterface Inits
   database_name: sensor_data
   database_server: postgres
-  auths_file: "~/auths.json" #this is bad... waiting on a scarab update to let us pass actual details via env vars
+  auths_file: "~/authentications.json" #this is bad... waiting on a scarab update to let us pass actual details via env vars
   endpoints:
     - name: values_table
       module: SQLTable
