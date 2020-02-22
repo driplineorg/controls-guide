@@ -42,6 +42,12 @@ services:
     environment:
       # per the docs, you do *not* want to run with this configuration in production
       - POSTGRES_HOST_AUTH_METHOD=trust
+  grafana:
+    image: grafana/grafana:6.6.2
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana.d:/etc/grafana
 
   sensor-logger:
     image: driplineorg/dripline-python:v4.1.0
