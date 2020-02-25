@@ -111,6 +111,11 @@ If you’re not familiar with compose, please review the <a class="reference ext
 You should also be familiar with <a class="reference external" href="https://docs.docker.com/compose/reference/exec/">exec</a> and <a class="reference external" href="https://docs.docker.com/compose/reference/logs/">logs</a> subcommands, all of these will be useful throughout this guide.</p>
 <p>If you are working through this walkthrough, you’re strongly encouraged to create a directory and write all of the files yourself, exploring the options or configurable parameters, etc.
 For reference, you can find a completed set of files for this example in the <a class="reference external" href="https://github.com/driplineorg/controls-guide/tree/master/examples/first-mesh">github repo for this documentation</a>.</p>
+<p>Finally, before we dig in, a request:</p>
+<ul class="simple">
+<li>Where possible, this documentation is directly importing file contents from the working example files. If something looks wrong or doesn’t match, it is possible that the <code class="docutils literal notranslate"><span class="pre">literalinclude</span></code> statements were not updated after the example was updated, please let us know by posting an issue (or even better, for the repo and send us a PR with the correction; documentation is a group effort).</li>
+<li>Throughout this and all examples, we have tried to pin versions (specifically container image versions) so that the examples are reproducible over time. An excellent exercise would be to explore cases where there are newer versions and the capabilities those may enable (and again, send us a PR if you find something helpful).</li>
+</ul>
 <div class="section" id="configure-the-message-broker">
 <h2>Configure the message broker<a class="headerlink" href="#configure-the-message-broker" title="Permalink to this headline">¶</a></h2>
 <p>The core to any dripline mesh is the AMQP message broker.
@@ -118,8 +123,8 @@ In principle, dripline-compliant messages could be sent over any transport proto
 We’ll set the username and password for the default role in RabbitMQ, to be used by all of our services.
 In principle, RabbitMQ provides interesting and sophisticated role-based access controls features which could be leveraged, but this is not currently done.
 This is done with the following service block in the docker-compose file:</p>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
 4
 5
@@ -140,17 +145,25 @@ This is done with the following service block in the docker-compose file:</p>
 The dripline libraries typically retrieve this information from an authentications file, we’ll go ahead and create that now:</p>
 <div class="literal-block-wrapper docutils container" id="authentications-file">
 <div class="code-block-caption"><span class="caption-text">authentications.json</span><a class="headerlink" href="#authentications-file" title="Permalink to this code">¶</a></div>
-<div class="highlight-json notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-json notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;amqp&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;broker&quot;</span><span class="p">:</span> <span class="s2">&quot;rabbit-broker&quot;</span><span class="p">,</span>
         <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;dripline&quot;</span><span class="p">,</span>
         <span class="nt">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;dripline&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;postgresql&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;postgres&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -165,8 +178,8 @@ In a more realistic use-case, the remembered value may be replaced by an interac
 <div class="section" id="the-compose-entry">
 <h3>The compose entry<a class="headerlink" href="#the-compose-entry" title="Permalink to this headline">¶</a></h3>
 <p>To create our dripline service, we add another object to the docker-compose definition file (under the <code class="docutils literal notranslate"><span class="pre">services:</span></code> block) that looks like the following:</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>11
 12
 13
@@ -178,7 +191,7 @@ In a more realistic use-case, the remembered value may be replaced by an interac
 19
 20
 21</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="nt">key-value-store</span><span class="p">:</span>
-    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">driplineorg/dripline-python:v4.0.0</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">driplineorg/dripline-python:v4.1.0</span>
     <span class="nt">depends_on</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">rabbit-broker</span>
     <span class="nt">volumes</span><span class="p">:</span>
@@ -212,8 +225,8 @@ Taking the “peaches” endpoint as an example, we see that we’re creating an
 We’re passing in an <code class="docutils literal notranslate"><span class="pre">initial_value</span></code> (defined in the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class itself), <code class="docutils literal notranslate"><span class="pre">get_on_set</span></code>, <code class="docutils literal notranslate"><span class="pre">log_on_set</span></code>, and <code class="docutils literal notranslate"><span class="pre">log_interval</span></code> (from the <code class="docutils literal notranslate"><span class="pre">Entity</span></code> base class), and <code class="docutils literal notranslate"><span class="pre">calibration</span></code> (from the <code class="docutils literal notranslate"><span class="pre">Endpoint</span></code> base class inherited through <code class="docutils literal notranslate"><span class="pre">Entity</span></code>).
 Any other arguments those classes take in their <code class="docutils literal notranslate"><span class="pre">__init__</span></code> are being left at the default values.
 The full configuration looks like:</p>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">key-value-store.yaml</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">key-value-store.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -266,6 +279,13 @@ The full configuration looks like:</p>
 <p>Having create the runtime configuration and added it to the compose environment, bring the the compose environment up to launch your containers.
 Probably the best option is to bring it up in daemon mode (with <code class="docutils literal notranslate"><span class="pre">-d</span></code>), but that’s up to you; I typically launch as a daemon, then use the <code class="docutils literal notranslate"><span class="pre">logs</span></code> subcommand with <code class="docutils literal notranslate"><span class="pre">-f</span></code> to follow the activity of any service I’m actively trying to debug.
 If you do this, you should see new output every 10 seconds when the peaches endpoints logs a new value (per the configured <code class="docutils literal notranslate"><span class="pre">log_interval</span></code> value).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The docker-compose utility does not do sophisticated lifecycle management.
+Of particular relevance here, the <code class="docutils literal notranslate"><span class="pre">depends_on</span></code> label only indicates the order that containers should be started, it does not wait for anythign to be “ready” before moving on.
+It is very common that, when starting from a new or fully stopped system, RabbitMQ takes some time to start and other services fail to connect to it.
+The simplest solution is to simply bring everything up again, you could instead try to add sleep or automatic restart statements to deal with this automatically, but that comes with its own subtleties and is probably an indication that you should consider more sophisticated orchestration (such as k8s).</p>
+</div>
 <p>With that working, use the <code class="docutils literal notranslate"><span class="pre">exec</span></code> subcommand to run a second bash shell in the key-value-store container.
 From here, we’ll use the command line interface to interact with our new service (note that you can use the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag with any of these tools to find out about the full set of available options).</p>
 <p>Use the <code class="docutils literal notranslate"><span class="pre">dl-mon</span></code> command (from <code class="docutils literal notranslate"><span class="pre">dripline-cpp</span></code> to watch the logs).
@@ -281,45 +301,218 @@ You should also see that a new value gets logged whenever you use <code class="d
 <div class="section" id="add-historical-data-storage">
 <h2>Add historical data storage<a class="headerlink" href="#add-historical-data-storage" title="Permalink to this headline">¶</a></h2>
 <p>This has all been nice for allowing us to interact with the key-value-store service.
-Hopefully you can see that if instead of the trivial implementations of the <code class="docutils literal notranslate"><span class="pre">on_get</span></code> and <code class="docutils literal notranslate"><span class="pre">on_set</span></code> methods in the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class, we could implement those methods with arbitrarily complex logic and still interact with them in the same way.
+Hopefully you can see that instead of the trivial implementations of the <code class="docutils literal notranslate"><span class="pre">on_get</span></code> and <code class="docutils literal notranslate"><span class="pre">on_set</span></code> methods in the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class, we could implement those methods with arbitrarily complex logic and still interact with them in the same way.
 For this tutorial however, we set aside the question of implementing more complex interactions with hardware and focus back on software issues.
 In particular, as built we have a way to find out what the current value of peaches is, but not what it has been.
 Normally we want to catch the value logs produced and record them in a database or other long-term storage system so that they can be referenced or processed later.</p>
-<p>The details of the logging system are discussed in the <a class="reference internal" href="../logging-data.html#logging-data"><span class="std std-ref">logging system</span></a> section so here we jump ahead with spinning it up.</p>
-<p>… the logging code has not yet been ported from dripline v2 to v3.
-The very-brief overview of how it works is that it listens to messages similar to what was done with <code class="docutils literal notranslate"><span class="pre">dl-mon</span></code> in the prior section.
-When a message is received, it unpacks the message’s payload data and uses that to insert a new record into the database.
-Our example adds data to postgres, but one could construct a similar system for logging to other databases.</p>
-<div class="section" id="todo-notes">
-<h3>ToDo Notes:<a class="headerlink" href="#todo-notes" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li>Create a postgres service in the compose (with volume &amp; initialization directory)</li>
-<li>Create an <code class="docutils literal notranslate"><span class="pre">endpoint_id_map</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoints_logs_double</span></code> table, an <code class="docutils literal notranslate"><span class="pre">endpoint_values</span></code> view</li>
-<li><em>Stretch:</em> Add a view that combines data types and resolves inserts to the correct tables.</li>
-<li>Create a sensor-logger service to record sensor values into the above</li>
-<li>can we just enable and use annonymous access (and add a comment on the lack of security)?</li>
-</ol>
+<p>The conceptual details of the logging system are discussed in the <a class="reference internal" href="../logging-data.html#logging-data"><span class="std std-ref">logging system</span></a> section so here we jump ahead with spinning it up.
+Currently dripline includes an implementation for logging data into a single table (or view) in a postgreSQL database.
+In the rest of this section we will provision a database and a dripline service to record data into it.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The database structure here is intended to serve as a minimal example and is not considered suitable for “production” or even “research and development” usage.
+It maximizes simplicity at the expense of all else.</p>
+</div>
+<div class="section" id="create-the-database">
+<h3>Create the database<a class="headerlink" href="#create-the-database" title="Permalink to this headline">¶</a></h3>
+<p>For our database, we will use the community supported postgres database container; you can find a description of the use of this container in <a class="reference external" href="https://hub.docker.com/_/postgres">the official documentation, hosted with the container</a>.
+We create a single database with a single table for storing our endpoint values in a subdirectory next to our <code class="docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code> file (and shortly will be mounting that directory into the container).
+The database setup file looks like:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">postgres_init.d/10_setup.sql</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-psql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">---</span>
+<span class="c1">--- Create a database for our values</span>
+<span class="c1">---</span>
+
+<span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">sensor_data</span> <span class="k">WITH</span> <span class="k">TEMPLATE</span> <span class="o">=</span> <span class="n">template0</span><span class="p">;</span>
+
+<span class="go">\connect sensor_data</span>
+
+<span class="go">-- table for storing doubles</span>
+<span class="go">-- NOTE: this design is very bad and only used as an example for easy</span>
+<span class="go">--       demonstration a production system probably wants to map sensor names</span>
+<span class="go">--       onto IDs may want to allow annotations of entries, may want annotation</span>
+<span class="go">--       of sensors, etc.</span>
+
+<span class="go">DROP TABLE IF EXISTS numeric_data;</span>
+<span class="go">CREATE TABLE numeric_data (</span>
+<span class="go">  sensor_name text NOT NULL,</span>
+<span class="go">  &quot;timestamp&quot; timestamp with time zone NOT NULL default now(),</span>
+<span class="go">  value_raw double precision NOT NULL,</span>
+<span class="go">  value_cal double precision</span>
+<span class="go">);</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>We then add it to our compose file as another service.
+In the minimal case that looks like the following block, in a more production-like environment, the database’s storage location would need to be persistanat so that data are not lost when the container stops.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>38
+39
+40
+41
+42
+43
+44</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="nt">postgres</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres:9.6</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./postgres_init.d:/docker-entrypoint-initdb.d</span>
+    <span class="nt">environment</span><span class="p">:</span>
+      <span class="c1"># per the docs, you do *not* want to run with this configuration in production</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">POSTGRES_HOST_AUTH_METHOD=trust</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 </div>
-<div class="section" id="add-historical-data-visualizer">
-<h2>Add historical data visualizer<a class="headerlink" href="#add-historical-data-visualizer" title="Permalink to this headline">¶</a></h2>
-<p>If historical storage of data is out-of-scope for dripline, then visualization of historical data is obviously more so.
-Nevertheless, a control system is not very useful unless it is easy to quickly view and understand the information being collected.
-For most use cases, we recommend leveraging third-party, open-source, solutions, as they tend to be much easier to manage and much more powerful than custom solutions (unless you have significant human resources to throw at the problem).
-Here, we use <a class="reference external" href="https://grafana.com">grafana</a>.
-It makes it easy to query a large number of data sources, including postgreSQL as configured in the previous section.
-It supports many visualizations (plots, tables, etc.), as well as setting alarm conditions (such as value out of bounds) and even external alarm integrations (such as sending messages to slack).</p>
-<div class="section" id="id1">
-<h3>ToDo Notes:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li>Create a grafana service<ol class="arabic">
-<li>configure to enable anyonmyous login? (or simple/default user/password)</li>
-<li>configure provisioning for datasource pointing to postgres above</li>
-</ol>
-</li>
-<li>Go through interactively creating a dashboard to plot one sensor’s time series &amp; a table of aggregate values
-#. Export and add the dashboard to the provisioning system</li>
-</ol>
+<div class="section" id="create-the-data-logging-service">
+<h3>Create the data logging service<a class="headerlink" href="#create-the-data-logging-service" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have a database, we will create the data logging service to bind to alert messages with sensor data and insert that into the database.
+The structure is similar to other services described above, we define the dripline objects required and set the configurable parameters in a single yaml file below.
+Per usual, the description of these parameters are included with the classes themselves.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">sensor-logger.yaml</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">runtime-config</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensor_data_logger</span>
+  <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgresSensorLogger</span>
+  <span class="nt">auth_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/root/authentications.json</span>
+  <span class="c1"># SensorLogger Inits</span>
+  <span class="nt">insertion_table_endpoint_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values_table</span>
+  <span class="c1"># AlertConsumer Inits</span>
+  <span class="nt">alert_keys</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;sensor_value.#&quot;</span>
+  <span class="nt">alert_key_parser_re</span><span class="p">:</span> <span class="s">&#39;sensor_value\.(?P&lt;sensor_name&gt;\w+)&#39;</span>
+  <span class="c1"># PostgreSQLInterface Inits</span>
+  <span class="nt">database_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensor_data</span>
+  <span class="nt">database_server</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres</span>
+  <span class="c1">#this is bad... waiting on a scarab update to let us pass</span>
+  <span class="c1">#               actual details via env vars</span>
+  <span class="nt">auths_file</span><span class="p">:</span> <span class="s">&quot;~/authentications.json&quot;</span>
+  <span class="nt">endpoints</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values_table</span>
+      <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SQLTable</span>
+      <span class="nt">table_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">numeric_data</span>
+      <span class="nt">required_insert_names</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sensor_name</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value_raw</span>
+      <span class="nt">optional_insert_names</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value_cal</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Again, following the same pattern as before, we add the dripline service to execute this configuration file to the compose configuration:</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="nt">sensor-logger</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">driplineorg/dripline-python:v4.1.0</span>
+    <span class="nt">depends_on</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">rabbit-broker</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">postgres</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./authentications.json:/root/authentications.json</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./sensor-logger.yaml:/root/sensor-logger.yaml</span>
+    <span class="nt">command</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dl-serve</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">-c</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/root/sensor-logger.yaml</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Having added these two compose services (<code class="docutils literal notranslate"><span class="pre">postgres</span></code> and <code class="docutils literal notranslate"><span class="pre">sensor-logger</span></code>), data will now be stored in the database.
+You can bring the system up as before and watch the <code class="docutils literal notranslate"><span class="pre">sensor-logger</span></code> console logs to see data received and being inserted, or connect to the <code class="docutils literal notranslate"><span class="pre">postgres</span></code> service and use the <code class="docutils literal notranslate"><span class="pre">psql</span></code> command line tool to explore the database content and see new rows populating (you’re enouraged to go try both of these on your own, but we’ll move along).</p>
+</div>
+<div class="section" id="data-visualization">
+<h3>Data visualization<a class="headerlink" href="#data-visualization" title="Permalink to this headline">¶</a></h3>
+<p>Having a database full of values is great, but in most cases you will also want some interactive way to see and explore the data.
+In principle we could build such a tool ourselves, but this is another place where we will leverage the freely available tools from the open source community; specifically we add an instance of <a class="reference external" href="https://grafana.com">grafana</a> (again per usual, you can get lots of details from the official website, or from the <a class="reference external" href="https://hub.docker.com/r/grafana/grafana/">main docker hub page</a> related to the container we will add.</p>
+<p>Similar to postgres, we can provide grafana with configuration files which set its initial configuration and provision capabilities (including the details for how to connect to the database).
+Feel free to explore those files or the description provided in the official documentation, here we proceed with the compose service</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>45
+46
+47
+48
+49
+50</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="nt">grafana</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grafana/grafana:6.6.2</span>
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;3000:3000&quot;</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./grafana.d:/etc/grafana</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Note that this configuration binds port 3000 in the container to the same port number on your host machine.
+This will allow us to browse to <code class="docutils literal notranslate"><span class="pre">http://localhost:3000</span></code> to view the grafana inteface, you may need to make adjustments based port availability or the networking details of your particular system.
+Having added all of these services and brought up the full compose environment, that link should present a login which accepts the default (insecure) login details (admin/admin).
+Once connected, you can select the “Explore” option from the left navigation bar to bring up an interactive page for looking at data contents.
+If you select the <code class="docutils literal notranslate"><span class="pre">sensor_data</span></code> data source from the drop-down menu at the top, grafana will help you build a SQL query.
+In the line marked <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> select the <code class="docutils literal notranslate"><span class="pre">+</span></code> to add an expression, click and replace the left <code class="docutils literal notranslate"><span class="pre">value</span></code> with <code class="docutils literal notranslate"><span class="pre">sensor_name</span></code> (the name of one of the columns in our table) and the right <code class="docutils literal notranslate"><span class="pre">value</span></code> with <code class="docutils literal notranslate"><span class="pre">'peaches'</span></code> to view the time series of our peaches data.
+The full configuration and rendering should look something like</p>
+<img alt="../_images/first-mesh-grafana-screenshot.png" src="../_images/first-mesh-grafana-screenshot.png" />
+<p>Feel free to explore the grafana UI, you can change the time interval or make various other changes.
+If you set new values to peaches, you’ll see the values in the plot change.
+Grafana also supports saving what it calls dashboards, which render one or more query.
+These can be saved and even added to its provisioning system (where they can be loaded automatically and even version controlled).
+Those capabilities are documented by grafana and are outside the scope of this guide.</p>
 </div>
 </div>
 </div>
