@@ -12,8 +12,6 @@ jobs:
   include:
     - stage: build docs
       script:
-        - set -ex
         - make html
         - ls ./build/html
-        - mv ./build/html /tmp/`echo ${TRAVIS_BRANCH} | tr / _`
-        - git status
+        - mv ./build/html /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)
