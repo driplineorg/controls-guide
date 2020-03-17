@@ -12,7 +12,7 @@ jobs:
   include:
     - stage: build docs
       script:
-        - set -e
+        - set -ex
         - make html
         - ls ./build/html
         - mv ./build/html /tmp/`echo ${TRAVIS_BRANCH} | tr / _`
