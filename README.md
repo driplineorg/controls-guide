@@ -1,2 +1,2 @@
 # controls-guide
-Description of building controls systems on dripline
+A collection of tutorials and guides for setting up or configuring controls systems.
