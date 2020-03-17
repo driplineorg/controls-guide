@@ -3,7 +3,15 @@ First Mesh Walkthrough
 In this walkthrough, we will go through the process of creating your first dripline mesh.
 A "mesh" refers to an AMQP message broker and all of the services which are connected to it.
 In most cases, this is the same as the controls for a particular system.
-Here we will create a very simple mesh including a broker for communication, a trivial service (which can be thought of as representing a simple instrument), and logging service along with both a third party database and database dashboarding tool (for storing and displaying historical data).
+
+Here we will create a very simple mesh, which includes:
+
+#. a rabbitmq broker for communication (this is a 3rd party application)
+#. a trivial service, which can be thought of as representing a simple instrument
+#. a very simple PostgreSQL database for storing values (this is a 3rd party application)
+#. a logging service, to store our fake sensor data in the database
+#. a grafana instance, a database dashboarding tool (this is a 3rd party application)
+
 We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.
 
 Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
