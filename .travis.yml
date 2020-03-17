@@ -15,3 +15,8 @@ jobs:
         - make html
         - ls ./build/html
         - mv ./build/html /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)
+        - git checkout gh-pages
+        - ls
+        - rsync -av --delete /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)/ ./$(echo ${TRAVIS_BRANCH} | tr / _)
+        - ls
+        - git status
