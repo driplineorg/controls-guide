@@ -13,6 +13,7 @@ jobs:
     - stage: build docs
       script:
         - set -e
+        - pip install requirements.txt
         - make html
         - ls ./build/html
         - mv ./build/html /tmp/${TRAVIS_BRANCH}
