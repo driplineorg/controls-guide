@@ -46,7 +46,12 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="guides.html">Tutorials</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">First Mesh Walkthrough</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">First Mesh Walkthrough</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configure-the-message-broker">Configure the message broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-a-dripline-service">Add a dripline service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-historical-data-storage">Add historical data storage</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="python-plugin.html">Python Plugin</a></li>
 </ul>
 </li>
@@ -101,9 +106,16 @@
 <h1>First Mesh Walkthrough<a class="headerlink" href="#first-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
 <p>In this walkthrough, we will go through the process of creating your first dripline mesh.
 A “mesh” refers to an AMQP message broker and all of the services which are connected to it.
-In most cases, this is the same as the controls for a particular system.
-Here we will create a very simple mesh including a broker for communication, a trivial service (which can be thought of as representing a simple instrument), and logging service along with both a third party database and database dashboarding tool (for storing and displaying historical data).
-We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.</p>
+In most cases, this is the same as the controls for a particular system.</p>
+<p>Here we will create a very simple mesh, which includes:</p>
+<ol class="arabic simple">
+<li>a rabbitmq broker for communication (this is a 3rd party application)</li>
+<li>a trivial service, which can be thought of as representing a simple instrument</li>
+<li>a very simple PostgreSQL database for storing values (this is a 3rd party application)</li>
+<li>a logging service, to store our fake sensor data in the database</li>
+<li>a grafana instance, a database dashboarding tool (this is a 3rd party application)</li>
+</ol>
+<p>We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.</p>
 <p>Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
 There is more discussion in the section on <a class="reference internal" href="../process-management.html#process-management"><span class="std std-ref">process management</span></a>.
 In this example, we will use <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> to define and deploy our collection of applications.

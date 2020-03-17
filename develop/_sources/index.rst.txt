@@ -7,7 +7,7 @@ Welcome to Dripline Controls Guide's documentation!
 ===================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    guides/guides
