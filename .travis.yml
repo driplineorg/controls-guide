@@ -1,5 +1,9 @@
 language: python
 
+git:
+  # override the default `--depth 50`
+  depth: false
+
 branches:
   only:
     - master
