@@ -1,0 +1,19 @@
+language: python
+
+branches:
+  only:
+    - master
+    - develop
+    # build tags which start with "v", have a semantic version, and then optionall a "-" followed by a string
+    - /^v\d+\.\d+\.\d+(-S*)?$/
+    # build branches which end in "/build"
+    - /.*\/(?i:build)$/
+jobs:
+  include:
+    - stage: build docs
+      script:
+        - set -e
+        - make html
+        - ls ./build/html
+        - mv ./build/html /tmp/${TRAVIS_BRANCH}
+        - git status
