@@ -15,5 +15,5 @@ jobs:
         - set -e
         - make html
         - ls ./build/html
-        - mv ./build/html /tmp/${TRAVIS_BRANCH}
+        - mv ./build/html /tmp/`echo ${TRAVIS_BRANCH} | tr / _`
         - git status
