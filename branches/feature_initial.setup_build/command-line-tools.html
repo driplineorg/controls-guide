@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Command Line Tools &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/dripline_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Security" href="security.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/dripline_favicon.ico" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/guides.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging-data.html">Logging Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-management.html">Process Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command Line Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dl-agent">dl-agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dl-mon">dl-mon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dl-serve">dl-serve</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="security.html" title="previous chapter">Security</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="command-line-tools">
+<span id="id1"></span><h1>Command Line Tools<a class="headerlink" href="#command-line-tools" title="Permalink to this headline">¶</a></h1>
+<p>The primary dripline libraryes ship with several command line tools which will describe here.
+The <code class="docutils literal notranslate"><span class="pre">dripline-cpp</span></code> software repo provides the <code class="docutils literal notranslate"><span class="pre">dl-agent</span></code> and <code class="docutils literal notranslate"><span class="pre">dl-mon</span></code> commands, which are used for generic interactions with a dripline mesh.
+The <code class="docutils literal notranslate"><span class="pre">dripline-python</span></code> repo (which s built on top of the <code class="docutils literal notranslate"><span class="pre">dripline-cpp</span></code> repo) adds the <code class="docutils literal notranslate"><span class="pre">dl-serve</span></code> command which is used to start up services.
+Each of the programs has extensive built-in documentation of its command line usage and behavior, which can be accessed by calling it with the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag.
+Here we will summarize when you might use each program and any key behaviors or features from the command line interface.</p>
+<div class="section" id="dl-agent">
+<h2>dl-agent<a class="headerlink" href="#dl-agent" title="Permalink to this headline">¶</a></h2>
+<p>This command is used to construct and send dripline messages and to collect the generated reply.
+Note that are subcommands corresponding to the various operations (get, set, cmd), and that in addition to providing details related to the request you are sending, you must provide the details required for making a connection to the message broker.
+It may be tempting to use this command in shell scripting to combine repeated or multi-step tasks.
+While this certainly works, it is often better to script in python, where the API is more directly available.</p>
+</div>
+<div class="section" id="dl-mon">
+<h2>dl-mon<a class="headerlink" href="#dl-mon" title="Permalink to this headline">¶</a></h2>
+<p>This command is used to passively collect and print messages sent via the AMQP broker.
+It can be very useful for monitoring to see if a service is producing expected messages.
+Be warned that if the monitor is running on the requests exchange, it counts as a consumer, and requests sent to a crashed service will not produce to normal error (which indicates that the message is undeliverable becuase there is no consumer).</p>
+</div>
+<div class="section" id="dl-serve">
+<h2>dl-serve<a class="headerlink" href="#dl-serve" title="Permalink to this headline">¶</a></h2>
+<p>This command is used to run a new dripline service.
+It parses a configuration file and uses the contents to instantiate the classes which do the work of the service.
+The top-level class must be a <code class="docutils literal notranslate"><span class="pre">Service</span></code> (or derived from it), this class is responsible for making the connection to AMQP and processing messages as they are delivered.
+Other classes must be instances of <code class="docutils literal notranslate"><span class="pre">Endpoint</span></code> (or derived from it).
+The <code class="docutils literal notranslate"><span class="pre">dl-serve</span></code> command can create instances of any classes in the dripline python package, including those added to its namespace using plugin packages (see, for example the <a class="reference internal" href="guides/python-plugin.html#python-plugin"><span class="std std-ref">plugin tutorial</span></a>.
+After creating all of the class instances, this command starts the infinite message consuming loop to process incoming request messages.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2019, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/command-line-tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
