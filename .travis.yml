@@ -1,26 +1,34 @@
 language: python
-
 git:
-  # override the default `--depth 50`
   depth: false
-
 branches:
   only:
-    - master
-    - develop
-    # build tags which start with "v", have a semantic version, and then optionall a "-" followed by a string
-    - /^v\d+\.\d+\.\d+(-S*)?$/
-    # build branches which end in "/build"
-    - /.*\/(?i:build)$/
+  - master
+  - develop
+  - "/^v\\d+\\.\\d+\\.\\d+(-S*)?$/"
+  - "/.*\\/(?i:build)$/"
+
+## before install generated per https://github.com/dwyl/learn-travis/blob/master/encrypted-ssh-keys-deployment.md
+##        note I needed to downgrade the travis gem to 1.8.10
+before_install:
+- openssl aes-256-cbc -K $encrypted_59dd47104fb2_key -iv $encrypted_59dd47104fb2_iv
+  -in deploy_key.enc -out ./deploy_key -d
+- ssh-add ./deploy_key
+- eval "$(ssh-agent -s)"
+- chmod 600 ./deploy_key
+- ssh-add ./deploy_key
+- ssh -T git@github.com
+
 jobs:
   include:
-    - stage: build docs
-      script:
-        - make html
-        - ls ./build/html
-        - mv ./build/html /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)
-        - git checkout gh-pages
-        - ls
-        - rsync -av --delete /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)/ ./$(echo ${TRAVIS_BRANCH} | tr / _)
-        - ls
-        - git status
+  - stage: build docs
+    script:
+    - make html
+    - ls ./build/html
+    - mv ./build/html /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)
+    - git checkout gh-pages
+    - ls
+    - rsync -av --delete /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)/ ./$(echo ${TRAVIS_BRANCH}
+      | tr / _)
+    - ls
+    - git status
