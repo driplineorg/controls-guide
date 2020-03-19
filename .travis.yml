@@ -7,9 +7,6 @@ branches:
   - develop
   - "/^v\\d+\\.\\d+\\.\\d+(-S*)?$/"
   - "/.*\\/(?i:build)$/"
-
-## before install generated per https://github.com/dwyl/learn-travis/blob/master/encrypted-ssh-keys-deployment.md
-##        note I needed to downgrade the travis gem to 1.8.10
 before_install:
 - openssl aes-256-cbc -K $encrypted_59dd47104fb2_key -iv $encrypted_59dd47104fb2_iv
   -in deploy_key.enc -out ./deploy_key -d
@@ -18,7 +15,6 @@ before_install:
 - chmod 600 ./deploy_key
 - ssh-add ./deploy_key
 - ssh -T git@github.com
-
 jobs:
   include:
   - stage: build docs
