@@ -27,14 +27,13 @@ jobs:
   - stage: build docs
     script:
     - echo $(if [[ "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_BRANCH" == "master" ]]; then echo "$TRAVIS_BRANCH"; elif [[ ! -z "$TRAVIS_TAG" ]]; then echo "tags/$TRAVIS_TAG"; else echo "branches/$(echo $TRAVIS_BRANCH | tr / _ | tr - .)"; fi) | tee /tmp/output_location
-    - echo "output to: $(cat /tmp/output_location)"
     - make html
     - ls ./build/html
-    - echo "ultimate output location is $(cat /tmp/output_location)"
     - mv ./build/html /tmp/build.html
     - git checkout gh-pages
     - git clean -d -f -x
     - ls
     - rsync -av --delete /tmp/build.html/ ./$(cat /tmp/output_location)
-    - tree -L 2
+    - tree -L 3
+    - git add $(cat /tmp/output_location)
     - git status
