@@ -37,3 +37,5 @@ jobs:
     - tree -L 3
     - git add $(cat /tmp/output_location)
     - git status
+    - git commit -m "built docs for ${TRAVIS_BRANCH}"
+    - git push
