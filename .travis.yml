@@ -17,13 +17,14 @@ jobs:
   include:
   - stage: build docs
     script:
+    - export OUTPUT_LOCATION=$(if [[ "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_BRANCH" == "master" ]]; then echo "$TRAVIS_BRANCH"; elif [[ ! -z "$TRAVIS_TAG" ]]; then echo "tags/$TRAVIS_TAG"; else echo "branches/$(echo $TARGET_BRANCH | tr / _)"; fi)
     - make html
     - ls ./build/html
-    - mv ./build/html /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)
+    - mv ./build/html /tmp/build.html
     - git checkout gh-pages
     - git clean -d -f -x
     - ls
-    - rsync -av --delete /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)/ ./$(echo ${TRAVIS_BRANCH}
-      | tr / _)
+    - echo "output to: ${OUTPUT_LOCATION}"
+    - rsync -av --delete /tmp/build.html/ ./${OUTPUT_LOCATION}
     - ls
     - git status
