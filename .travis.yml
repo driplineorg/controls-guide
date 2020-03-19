@@ -30,6 +30,7 @@ jobs:
     - echo "output to: ${OUTPUT_LOCATION}"
     - make html
     - ls ./build/html
+    - echo "ultimate output location is ${OUTPUT_LOCATION}"
     - mv ./build/html /tmp/build.html
     - git checkout gh-pages
     - git clean -d -f -x
