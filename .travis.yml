@@ -26,7 +26,7 @@ jobs:
   include:
   - stage: build docs
     script:
-    - echo $(if [[ "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_BRANCH" == "master" ]]; then echo "$TRAVIS_BRANCH"; elif [[ ! -z "$TRAVIS_TAG" ]]; then echo "tags/$TRAVIS_TAG"; else echo "branches/$(echo $TRAVIS_BRANCH | tr / _)"; fi) | tee /tmp/output_location
+    - echo $(if [[ "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_BRANCH" == "master" ]]; then echo "$TRAVIS_BRANCH"; elif [[ ! -z "$TRAVIS_TAG" ]]; then echo "tags/$TRAVIS_TAG"; else echo "branches/$(echo $TRAVIS_BRANCH | tr / _ | tr - .)"; fi) | tee /tmp/output_location
     - echo "output to: $(cat /tmp/output_location)"
     - make html
     - ls ./build/html
