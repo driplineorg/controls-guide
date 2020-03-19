@@ -13,7 +13,6 @@ before_install:
   -in deploy_key.enc -out ./deploy_key -d
 - chmod 600 ./deploy_key
 - ssh-add ./deploy_key
-- ssh -T git@github.com
 jobs:
   include:
   - stage: build docs
@@ -22,6 +21,7 @@ jobs:
     - ls ./build/html
     - mv ./build/html /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)
     - git checkout gh-pages
+    - git clean -d -f -x
     - ls
     - rsync -av --delete /tmp/$(echo ${TRAVIS_BRANCH} | tr / _)/ ./$(echo ${TRAVIS_BRANCH}
       | tr / _)
