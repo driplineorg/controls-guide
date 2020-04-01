@@ -1,3 +1,6 @@
+.. _first-mesh-walkthrough:
+
+======================
 First Mesh Walkthrough
 ======================
 In this walkthrough, we will go through the process of creating your first dripline mesh.

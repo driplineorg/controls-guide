@@ -99,7 +99,7 @@
           <div class="body" role="main">
             
   <div class="section" id="first-mesh-walkthrough">
-<h1>First Mesh Walkthrough<a class="headerlink" href="#first-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>First Mesh Walkthrough<a class="headerlink" href="#first-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
 <p>In this walkthrough, we will go through the process of creating your first dripline mesh.
 A “mesh” refers to an AMQP message broker and all of the services which are connected to it.
 In most cases, this is the same as the controls for a particular system.</p>
@@ -131,8 +131,8 @@ In principle, dripline-compliant messages could be sent over any transport proto
 We’ll set the username and password for the default role in RabbitMQ, to be used by all of our services.
 In principle, RabbitMQ provides interesting and sophisticated role-based access controls features which could be leveraged, but this is not currently done.
 This is done with the following service block in the docker-compose file:</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
 4
 5
@@ -186,8 +186,8 @@ In a more realistic use-case, the remembered value may be replaced by an interac
 <div class="section" id="the-compose-entry">
 <h3>The compose entry<a class="headerlink" href="#the-compose-entry" title="Permalink to this headline">¶</a></h3>
 <p>To create our dripline service, we add another object to the docker-compose definition file (under the <code class="docutils literal notranslate"><span class="pre">services:</span></code> block) that looks like the following:</p>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>11
 12
 13
@@ -233,8 +233,8 @@ Taking the “peaches” endpoint as an example, we see that we’re creating an
 We’re passing in an <code class="docutils literal notranslate"><span class="pre">initial_value</span></code> (defined in the <code class="docutils literal notranslate"><span class="pre">KeyValueStore</span></code> class itself), <code class="docutils literal notranslate"><span class="pre">get_on_set</span></code>, <code class="docutils literal notranslate"><span class="pre">log_on_set</span></code>, and <code class="docutils literal notranslate"><span class="pre">log_interval</span></code> (from the <code class="docutils literal notranslate"><span class="pre">Entity</span></code> base class), and <code class="docutils literal notranslate"><span class="pre">calibration</span></code> (from the <code class="docutils literal notranslate"><span class="pre">Endpoint</span></code> base class inherited through <code class="docutils literal notranslate"><span class="pre">Entity</span></code>).
 Any other arguments those classes take in their <code class="docutils literal notranslate"><span class="pre">__init__</span></code> are being left at the default values.
 The full configuration looks like:</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">key-value-store.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">key-value-store.yaml</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -326,8 +326,8 @@ It maximizes simplicity at the expense of all else.</p>
 <p>For our database, we will use the community supported postgres database container; you can find a description of the use of this container in <a class="reference external" href="https://hub.docker.com/_/postgres">the official documentation, hosted with the container</a>.
 We create a single database with a single table for storing our endpoint values in a subdirectory next to our <code class="docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code> file (and shortly will be mounting that directory into the container).
 The database setup file looks like:</p>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">postgres_init.d/10_setup.sql</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">postgres_init.d/10_setup.sql</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
 <div class="highlight-psql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -374,8 +374,8 @@ The database setup file looks like:</p>
 </div>
 <p>We then add it to our compose file as another service.
 In the minimal case that looks like the following block, in a more production-like environment, the database’s storage location would need to be persistanat so that data are not lost when the container stops.</p>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>38
 39
 40
@@ -398,8 +398,8 @@ In the minimal case that looks like the following block, in a more production-li
 <p>Now that we have a database, we will create the data logging service to bind to alert messages with sensor data and insert that into the database.
 The structure is similar to other services described above, we define the dripline objects required and set the configurable parameters in a single yaml file below.
 Per usual, the description of these parameters are included with the classes themselves.</p>
-<div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">sensor-logger.yaml</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">sensor-logger.yaml</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -455,8 +455,8 @@ Per usual, the description of these parameters are included with the classes the
 </td></tr></table></div>
 </div>
 <p>Again, following the same pattern as before, we add the dripline service to execute this configuration file to the compose configuration:</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>52
 53
 54
@@ -492,8 +492,8 @@ You can bring the system up as before and watch the <code class="docutils litera
 In principle we could build such a tool ourselves, but this is another place where we will leverage the freely available tools from the open source community; specifically we add an instance of <a class="reference external" href="https://grafana.com">grafana</a> (again per usual, you can get lots of details from the official website, or from the <a class="reference external" href="https://hub.docker.com/r/grafana/grafana/">main docker hub page</a> related to the container we will add.</p>
 <p>Similar to postgres, we can provide grafana with configuration files which set its initial configuration and provision capabilities (including the details for how to connect to the database).
 Feel free to explore those files or the description provided in the official documentation, here we proceed with the compose service</p>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">docker-compose.yaml</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>45
 46
 47
