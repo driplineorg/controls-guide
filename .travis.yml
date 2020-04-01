@@ -13,7 +13,7 @@ branches:
   - master
   - develop
   - "/^v\\d+\\.\\d+\\.\\d+(-S*)?$/"
-  - "/.*\\/(?i:build)$/"
+  - "/.*\\.(?i:build)$/"
 
 before_install:
 - eval "$(ssh-agent -s)"
