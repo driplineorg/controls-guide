@@ -1,0 +1,4 @@
+rabbitmq:
+  username: dripline
+  password: dripline
+  erlangCookie: dripline
