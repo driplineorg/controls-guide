@@ -7,14 +7,19 @@ Welcome to Dripline Controls Guide's documentation!
 ===================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
-   first-mesh
+   guides/guides
    logging-data
    process-management
    security
 
+
+.. toctree::
+   :hidden:
+
+   command-line-tools
 
 Indices and tables
 ==================

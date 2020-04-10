@@ -1,3 +1,5 @@
+.. _logging-data:
+
 Logging Data
 ============
 
@@ -12,6 +14,7 @@ This is achieved by sending messages on the `alerts` exchange.
 Each message's routing key indicates the general type of the data (first word in the routing key) and the specific name for the data (second word in the routing key, often the same as the name of the endpoint sending the data).
 For objects one would consider a "sensor" to store scalar values at a regular interval, the existing `Entity` class can be used and takes care of internal timing, as well as providing some logic for non-uniform sampling.
 Other common patterns would be:
+
 * a service which produces an alert message as part of the logic resulting from a received command
 * a service which consumes alert messages and produces new alerts messages based on them (logging derived values or converting raw alerts to a log-system compatible form)
 
