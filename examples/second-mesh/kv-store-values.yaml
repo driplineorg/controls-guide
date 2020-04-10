@@ -6,7 +6,7 @@ configFileData:
   runtime-config:
     name: my_store
     module: Service
-    auth_file: /etc/authentications-secret/authentications.json
+    auth_file: /etc/rabbitmq-secret/authentications.json
     endpoints:
       - name: peaches
         module: KeyValueStore
