@@ -9,7 +9,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=dripline
 
   key-value-store:
-    image: driplineorg/dripline-python:v4.4.0
+    image: driplineorg/dripline-python:v4.4.1-amd64
     depends_on:
       - rabbit-broker
     volumes:
@@ -21,7 +21,7 @@ services:
       - /root/key-value-store.yaml
 
   drip-mon:
-    image: driplineorg/dripline-python:v4.4.0
+    image: driplineorg/dripline-python:v4.4.1-amd64
     depends_on:
       - rabbit-broker
     volumes:
@@ -50,7 +50,7 @@ services:
       - ./grafana.d:/etc/grafana
 
   sensor-logger:
-    image: driplineorg/dripline-python:v4.4.0
+    image: driplineorg/dripline-python:v4.4.1-amd64
     depends_on:
       - rabbit-broker
       - postgres
