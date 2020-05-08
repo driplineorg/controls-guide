@@ -33,6 +33,6 @@ To run
 
    After the helm chart is installed, there will be instructions on how you can view grafana. 
 
-6. Install grafana. You can manually connect your database. Use your database pod URL. Mine is postgres-kvstore-postgresql.default.svc.cluster.local
+7. Install grafana. You can manually connect your database. Use your database pod URL. Mine is postgres-kvstore-postgresql.default.svc.cluster.local
 
 
