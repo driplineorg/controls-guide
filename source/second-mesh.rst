@@ -23,18 +23,18 @@ To run
 
 4. Install database
    ::
-      helm install postgres-kvstore bitnami/rabbitmq -f postgres-kv-store-values.yaml
+      helm install postgres-kvstore bitnami/rabbitmq -f example/k8s/postgres-kv-store-values.yaml
 
 5. Install database logger.
    ::
-      helm install kv-store-sensor-logger bitnami/rabbitmq -f kv-store-sensor-logger-values.yaml
+      helm install kv-store-sensor-logger bitnami/rabbitmq -f example/k8s/kv-store-sensor-logger-values.yaml
 
 6. Install grafana.
    ::
-      helm install grafana bitnami/rabbitmq -f grafana-values.yaml
+      helm install grafana bitnami/rabbitmq -f example/k8s/grafana-values.yaml
 
    After the helm chart is installed, there will be instructions on how you can view grafana. 
 
-6. Install grafana. You can manually connect your database. Use your database pod URL. Mine is postgres-kvstore-postgresql.default.svc.cluster.local
+7. Install grafana. You can manually connect your database. Use your database pod URL. Mine is postgres-kvstore-postgresql.default.svc.cluster.local
 
 
