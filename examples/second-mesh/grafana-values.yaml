@@ -1,0 +1,5 @@
+admin:
+  user: dripline
+  password: dripline
+persistence:
+  enabled: false
