@@ -153,7 +153,7 @@ Visualization
 We again install grafana to use for looking at our daata.
 We use a kubernetes manifest to create a secret with the datasource configuration required for connecting to our database and then pass it into the chart so that it gets provisioned automatically (see chart docs for details).
 
-.. literalinclude:: ../../examples/second-mesh/grafana-datasource-secret.yaml
+.. .. literalinclude:: ../../examples/second-mesh/grafana-datasource-secret.yaml
    :caption: grafana-datasource-secret.yaml
    :language: yaml
    :linenos:
@@ -188,6 +188,7 @@ Before concluding, we'll leave you with some patterns and notes that we've found
 * Similarly, because the containers are deployed as kubernetes ``Deployment`` objects, the system will monitor the number of running pods and restore them. If you want to quickly restart something, you can use ``kubectl delete pods ...`` to delete the running pod and let the controller immediately recreate it.
 * If you want to use the dripline command line interface tools, you can use ``kubectl exec ..`` to start a shell in a running pod. This may be easier than installing the tools locally, especially because the authentication secret will be available. Note, however, that if the main service process ends then your shell will terminate with an undefined error behavior.
 * There are many more third-party tools from the cloud ecosystem which you may find useful for monitoring the health of your controls system.
+
   * We've found `prometheus-operator <https://github.com/coreos/prometheus-operator>`_ (deployable from a helm chart per the README) very useful for monitoring the health of the underlying kubernetes cluster and compute hardware.
   * The `ELK stack <https://www.elastic.co/elastic-stack?ultron=[EL]-[B]-[Trials]-[AMER]-[US-W]-Exact&blade=adwords-s&Device=c&thor=elk%20stack&gclid=Cj0KCQjwhtT1BRCiARIsAGlY51K3Kdpj_ZQmcAgcHLEs0JqUGK2gCiAJ-IDzXM1SmCXGM2dNwGukzHcaAhT-EALw_wcB>`_ is a helpful way to aggreate logs from many services.
 
