@@ -1,5 +1,7 @@
 replicaCount: 1
 
+rabbitmqSecretName: rabbitmq-authentications-secret
+
 command: '["dl-serve", "-c", "/etc/config/config_file.yaml", "-v", "-b", "rabbitmq-app.default.svc.cluster.local"]'
 
 configFileData:

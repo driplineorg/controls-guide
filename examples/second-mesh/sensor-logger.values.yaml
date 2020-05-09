@@ -1,5 +1,7 @@
 replicaCount: 1
 
+rabbitmqSecretName: rabbitmq-authentications-secret
+
 configFileData:
   runtime-config:
     name: sensor_data_logger
@@ -13,7 +15,7 @@ configFileData:
     alert_key_parser_re: 'sensor_value\.(?P<sensor_name>\w+)'
     # PostgreSQLInterface Inits
     database_name: sensor_data
-    database_server: postgres-kvstore-postgresql.default.svc.cluster.local
+    database_server: postgres-postgresql.default.svc.cluster.local
     #this is bad... waiting on a scarab update to let us pass
     #               actual details via env vars
     auths_file: "/etc/rabbitmq-secret/authentications.json"

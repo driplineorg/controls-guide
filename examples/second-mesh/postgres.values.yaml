@@ -7,7 +7,7 @@ persistence:
   enabled: false
 
 postgresqlUsername: dripline
-postgesqlPassword: dripline
+postgresqlPassword: dripline
 
 initdbScripts:
   10_setup.sql: |
