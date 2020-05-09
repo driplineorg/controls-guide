@@ -2,6 +2,6 @@ admin:
   user: dripline
   password: dripline
 datasources:
-  secretName: grafana-secret
+  secretName: grafana-datasource-secret
 persistence:
   enabled: false

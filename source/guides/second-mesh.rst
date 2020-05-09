@@ -153,7 +153,7 @@ Visualization
 We again install grafana to use for looking at our daata.
 We use a kubernetes manifest to create a secret with the datasource configuration required for connecting to our database and then pass it into the chart so that it gets provisioned automatically (see chart docs for details).
 
-.. .. literalinclude:: ../../examples/second-mesh/grafana-datasource-secret.yaml
+.. literalinclude:: ../../examples/second-mesh/grafana-datasource-secret.yaml
    :caption: grafana-datasource-secret.yaml
    :language: yaml
    :linenos:
