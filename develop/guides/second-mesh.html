@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Second Mesh Walkthrough &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/DL3Logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging Data" href="../logging-data.html" />
+    <link rel="prev" title="Python Plugin" href="python-plugin.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/DL3Logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="first-mesh.html">First Mesh Walkthrough</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-plugin.html">Python Plugin</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Second Mesh Walkthrough</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deployment">Deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-notes">Other Notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../logging-data.html">Logging Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../process-management.html">Process Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../command-line-tools.html">Command Line Tools</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="guides.html">Tutorials</a><ul>
+      <li>Previous: <a href="python-plugin.html" title="previous chapter">Python Plugin</a></li>
+      <li>Next: <a href="../logging-data.html" title="next chapter">Logging Data</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="second-mesh-walkthrough">
+<span id="id1"></span><h1>Second Mesh Walkthrough<a class="headerlink" href="#second-mesh-walkthrough" title="Permalink to this headline">¶</a></h1>
+<p>This walkthrough is intended to be functionally identical to <a class="reference internal" href="first-mesh.html#first-mesh-walkthrough"><span class="std std-ref">First Mesh Walkthrough</span></a> except that instaed of deploying services using a single docker-compose file, they will each be deployed into a kubernetes cluster using helm charts.
+If you haven’t already done so, please at least go skim over the first mesh page, here we skip the explanations that are there and jump directly to deployment and the details specific to this setup.</p>
+<p>As in the first mesh, it is important to note that there are lots of choices and possible configurations of the third-party components used here.
+For the purposes of this guide, we’ve prioritized ease of configuration to simplify the demonstration; we do not necessarily recommend these choices for production environments (every case is different and you should think about what your requirements are).</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>In order to follow this tutorial you will need to have several resources available:</p>
+<dl class="glossary simple">
+<dt id="term-A-running-kubernetes-environment.">A running kubernetes environment.</dt><dd><p>This tutorial is being written and tested using kubernetes 1.15.5 as shipped with docker desktop CE (2.2.0.5) on MacOS. It is not expected to be very sensitive to those versions, but check the release notes if you differ widely or have issues.</p>
+</dd>
+<dt id="term-The-helm-tool.">The <a class="reference external" href="https://helm.sh">helm</a> tool.</dt><dd><p>Development and testing is being done on version 3.2.0, version 2 is not supported.</p>
+</dd>
+<dt id="term-A-local-clone-of-the-dripline-python-repo.">A local clone of the <a class="reference external" href="https://github.com/driplineorg/dripline-python">dripline-python repo</a>.</dt><dd><p>We do not currently have a CI/CD pipeline established for bulding and publishing charts to a repository and so the dripline-python chart instances will be released from a local path.
+Throughout this guide, we assume that is located at <code class="docutils literal notranslate"><span class="pre">DRIPLINE_PYTHON_ROOT</span></code>.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="deployment">
+<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">¶</a></h2>
+<p>The complete set of configuration files used here are available in the <a class="reference external" href="https://github.com/driplineorg/controls-guide/tree/master/examples/second-mesh">github repo for this documentation</a>.
+There the values override files for releases of charts are named following the pattern <code class="docutils literal notranslate"><span class="pre">RELEASE_NAME.values.yaml</span></code> (where RELEASE_NAME is replaced in each case).</p>
+<p>For third-party applications we’ll use helm charts provided and maintained by bitnami.
+This choice is somewhat arbitrary and you may reasonably choose to use some other available chart, or roll your own.
+In order to use those, we first need to add the repository to the helm environment with the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">repo</span> <span class="n">add</span> <span class="n">bitnami</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">charts</span><span class="o">.</span><span class="n">bitnami</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">bitnami</span>
+</pre></div>
+</div>
+<p>Without further ado, let’s start deploying our workloads.</p>
+<div class="section" id="rabbitmq-broker">
+<h3>RabbitMQ Broker<a class="headerlink" href="#rabbitmq-broker" title="Permalink to this headline">¶</a></h3>
+<p>We again start by standing up the message broker.
+We write a simple values override file to configure the user and password.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">rabbitmq.values.yaml</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">rabbitmq</span><span class="p">:</span>
+  <span class="nt">username</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+  <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+  <span class="nt">erlangCookie</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Per the helm command line interface, we can then release an instance of the chart with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">rabbitmq</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">rabbitmq</span> <span class="o">-</span><span class="n">f</span> <span class="n">rabbitmq</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>This produces a release named <code class="docutils literal notranslate"><span class="pre">rabbitmq</span></code> and uses the default knubernetes namespace.</p>
+<p>In order to connect to the broker, our dripline services will require the password we just configured.
+We will create a kubernetes secret with that information and pass it into our services.
+Here this is done without a chart, using a raw secret created from a manifest, but other charts may produce a strong password and provide access through their own secrets.
+Also, the secret here also includes credentials for the postgreSQL database we’re about to deploy.
+The manifest is</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">rabbitmq-authentications-secret.yaml</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rabbitmq-authentications-secret</span>
+<span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+  <span class="nt">authentications.json</span><span class="p">:</span> <span class="p p-Indicator">|-</span>
+    <span class="no">{</span>
+      <span class="no">&quot;amqp&quot;: {</span>
+        <span class="no">&quot;broker&quot;: &quot;rabbitmq.default.svc.cluster.local&quot;,</span>
+        <span class="no">&quot;username&quot;: &quot;dripline&quot;,</span>
+        <span class="no">&quot;password&quot;: &quot;dripline&quot;</span>
+      <span class="no">},</span>
+        <span class="no">&quot;postgresql&quot;: {</span>
+          <span class="no">&quot;username&quot;: &quot;dripline&quot;,</span>
+          <span class="no">&quot;password&quot;: &quot;dripline&quot;</span>
+      <span class="no">}</span>
+    <span class="no">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>You can find more information in the <a class="reference external" href="https://kubernetes.io/docs/concepts/configuration/secret/">official documentation on secrets</a>.
+The manifest can be installed with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">rabbitmq</span><span class="o">-</span><span class="n">authentications</span><span class="o">-</span><span class="n">secret</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is active development in the scarab repo (a dependency of dripline-cpp) on a feature which will enable the runtime configuration of dripline services to support templating at the time of execution.
+This will allow this omnibus secret to be eliminated in favor of secrets which are specific to (and associated with) the resources they provide access to.</p>
+</div>
+</div>
+<div class="section" id="the-key-value-store">
+<h3>The key-value store<a class="headerlink" href="#the-key-value-store" title="Permalink to this headline">¶</a></h3>
+<p>Next we create a release of the dripline-python chart for our key-value store.
+In the following values override, note that the entire configuration file content is included as a dictionary object, it will be used to populate a kubernetes configMap object by the chart.
+Also note that we pass in the name of the secret created in the prior step.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">key-value-store.values.yaml</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">replicaCount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">rabbitmqSecretName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rabbitmq-authentications-secret</span>
+
+<span class="nt">command</span><span class="p">:</span> <span class="s">&#39;[&quot;dl-serve&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;/etc/config/config_file.yaml&quot;,</span><span class="nv"> </span><span class="s">&quot;-v&quot;,</span><span class="nv"> </span><span class="s">&quot;-b&quot;,</span><span class="nv"> </span><span class="s">&quot;rabbitmq-app.default.svc.cluster.local&quot;]&#39;</span>
+
+<span class="nt">configFileData</span><span class="p">:</span>
+  <span class="nt">runtime-config</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my_store</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Service</span>
+    <span class="nt">auth_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/etc/rabbitmq-secret/authentications.json</span>
+    <span class="nt">endpoints</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">peaches</span>
+        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeyValueStore</span>
+        <span class="nt">calibration</span><span class="p">:</span> <span class="s">&#39;2*{}&#39;</span>
+        <span class="nt">initial_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.75</span>
+        <span class="nt">log_interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+        <span class="nt">get_on_set</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+        <span class="nt">log_on_set</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chips</span>
+        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeyValueStore</span>
+        <span class="nt">calibration</span><span class="p">:</span> <span class="s">&#39;times3({})&#39;</span>
+        <span class="nt">initial_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.75</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">waffles</span>
+        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeyValueStore</span>
+        <span class="c1">#log_interval: 30</span>
+        <span class="c1">#log_on_set: True</span>
+        <span class="nt">calibration</span><span class="p">:</span> <span class="s">&#39;1.*{}&#39;</span>
+        <span class="nt">initial_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4.00</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>We deploy the release following the same patter, with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span> <span class="n">DRIPLINE_PYTHON_ROOT</span><span class="o">/</span><span class="n">chart</span> <span class="o">-</span><span class="n">f</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<div class="section" id="a-pause-for-demonstration">
+<h4>A pause for demonstration<a class="headerlink" href="#a-pause-for-demonstration" title="Permalink to this headline">¶</a></h4>
+<p>Let’s pause our deployments for a moment to see how we may interact with the system.
+If you’re already comfortable with the <code class="docutils literal notranslate"><span class="pre">helm</span></code> and <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> command line interfaces, feel free to jump ahead to the next section.</p>
+<p>First, let’s take a look at the releases we’ve created, <code class="docutils literal notranslate"><span class="pre">helm</span> <span class="pre">list</span></code> will list the releases and some basic status information:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>            <span class="n">NAMESPACE</span>       <span class="n">REVISION</span>        <span class="n">UPDATED</span>                                 <span class="n">STATUS</span>          <span class="n">CHART</span>                   <span class="n">APP</span> <span class="n">VERSION</span>
+<span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span> <span class="n">default</span>         <span class="mi">1</span>               <span class="mi">2020</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">08</span> <span class="mi">21</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mf">40.240297</span> <span class="o">-</span><span class="mi">0700</span> <span class="n">PDT</span>    <span class="n">deployed</span>        <span class="n">dripline</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span>   <span class="n">v4</span><span class="o">.</span><span class="mf">4.2</span><span class="o">-</span><span class="n">amd64</span>
+<span class="n">rabbitmq</span>        <span class="n">default</span>         <span class="mi">1</span>               <span class="mi">2020</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">08</span> <span class="mi">21</span><span class="p">:</span><span class="mi">04</span><span class="p">:</span><span class="mf">47.707076</span> <span class="o">-</span><span class="mi">0700</span> <span class="n">PDT</span>    <span class="n">deployed</span>        <span class="n">rabbitmq</span><span class="o">-</span><span class="mf">6.25</span><span class="o">.</span><span class="mi">9</span>         <span class="mf">3.8</span><span class="o">.</span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>We can also inspect the kubernetes pod bojects with <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">get</span> <span class="pre">pods</span></code>, which produces complementary information:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>                                                          <span class="n">READY</span>   <span class="n">STATUS</span>    <span class="n">RESTARTS</span>   <span class="n">AGE</span>
+<span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span><span class="o">-</span><span class="n">dripline</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">deployment</span><span class="o">-</span><span class="mi">78</span><span class="n">dfb7f6c5</span><span class="o">-</span><span class="n">gzl5k</span>   <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Running</span>   <span class="mi">0</span>          <span class="mi">6</span><span class="n">s</span>
+<span class="n">rabbitmq</span><span class="o">-</span><span class="mi">0</span>                                                    <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Running</span>   <span class="mi">0</span>          <span class="mi">5</span><span class="n">m23s</span>
+</pre></div>
+</div>
+<p>If you want to see the logs from a running service, use <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">logs</span> <span class="pre">-f</span> <span class="pre">&lt;pod-name&gt;</span></code> (you may also find the <code class="docutils literal notranslate"><span class="pre">--tail</span></code> flag useful for pods that have been running for a while, see the docs for more explanation and options).
+You can use <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">exec</span> <span class="pre">...</span></code> to launch a shell in the running container and use the dripline command line interface to interact with the service in the same way as you did in the first mesh tutorial.</p>
+</div>
+</div>
+<div class="section" id="historical-data-storage">
+<h3>Historical data storage<a class="headerlink" href="#historical-data-storage" title="Permalink to this headline">¶</a></h3>
+<p>Moving on, we go ahead and once again add a postgres database.
+The same caveats apply, the structure of this database is not very well suited to production or high-complexity data, but it will serve for our demonstration.
+We again use the bitnami chart, where we use the override file to set the username and password, as well as creating our table with the same <code class="docutils literal notranslate"><span class="pre">sql</span></code> script from first mesth.
+The override file is</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">postgres.values.yaml</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">image</span><span class="p">:</span>
+  <span class="nt">registry</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io</span>
+  <span class="nt">repository</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bitnami/postgresql</span>
+  <span class="nt">tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">11.7.0-debian-10-r90</span>
+
+<span class="nt">persistence</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">postgresqlUsername</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+<span class="nt">postgresqlPassword</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+
+<span class="nt">initdbScripts</span><span class="p">:</span>
+  <span class="nt">10_setup.sql</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+    <span class="no">---</span>
+    <span class="no">--- Create a database for our values</span>
+    <span class="no">---</span>
+
+    <span class="no">CREATE DATABASE sensor_data WITH TEMPLATE = template0;</span>
+
+    <span class="no">\connect sensor_data</span>
+
+    <span class="no">-- table for storing doubles</span>
+    <span class="no">-- NOTE: this design is very bad and only used as an example for easy</span>
+    <span class="no">--       demonstration a production system probably wants to map sensor names</span>
+    <span class="no">--       onto IDs may want to allow annotations of entries, may want annotation</span>
+    <span class="no">--       of sensors, etc.</span>
+
+    <span class="no">DROP TABLE IF EXISTS numeric_data;</span>
+    <span class="no">CREATE TABLE numeric_data (</span>
+      <span class="no">sensor_name text NOT NULL,</span>
+      <span class="no">&quot;timestamp&quot; timestamp with time zone NOT NULL default now(),</span>
+      <span class="no">value_raw double precision NOT NULL,</span>
+      <span class="no">value_cal double precision</span>
+    <span class="no">);</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>and we deploy it with the now familar command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">postgres</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">postgresql</span> <span class="o">-</span><span class="n">f</span> <span class="n">postgres</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>We also again deploy a <code class="docutils literal notranslate"><span class="pre">sensor-logger</span></code> dripline service to consume alert messages and populate the database.
+The values file follows the same considerations as for the <code class="docutils literal notranslate"><span class="pre">key-value-store</span></code> service above</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">sensor-logger.values.yaml</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">replicaCount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">rabbitmqSecretName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rabbitmq-authentications-secret</span>
+
+<span class="nt">configFileData</span><span class="p">:</span>
+  <span class="nt">runtime-config</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensor_data_logger</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgresSensorLogger</span>
+    <span class="nt">auth_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/etc/rabbitmq-secret/authentications.json</span>
+    <span class="c1"># SensorLogger Inits</span>
+    <span class="nt">insertion_table_endpoint_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values_table</span>
+    <span class="c1"># AlertConsumer Inits</span>
+    <span class="nt">alert_keys</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;sensor_value.#&quot;</span>
+    <span class="nt">alert_key_parser_re</span><span class="p">:</span> <span class="s">&#39;sensor_value\.(?P&lt;sensor_name&gt;\w+)&#39;</span>
+    <span class="c1"># PostgreSQLInterface Inits</span>
+    <span class="nt">database_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensor_data</span>
+    <span class="nt">database_server</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres-postgresql.default.svc.cluster.local</span>
+    <span class="c1">#this is bad... waiting on a scarab update to let us pass</span>
+    <span class="c1">#               actual details via env vars</span>
+    <span class="nt">auths_file</span><span class="p">:</span> <span class="s">&quot;/etc/rabbitmq-secret/authentications.json&quot;</span>
+    <span class="nt">endpoints</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values_table</span>
+        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SQLTable</span>
+        <span class="nt">table_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">numeric_data</span>
+        <span class="nt">required_insert_names</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sensor_name</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value_raw</span>
+        <span class="nt">optional_insert_names</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value_cal</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Release it with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span> <span class="n">DRIPLINE_PYTHON_ROOT</span><span class="o">/</span><span class="n">chart</span> <span class="o">-</span><span class="n">f</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<p>We again install grafana to use for looking at our daata.
+We use a kubernetes manifest to create a secret with the datasource configuration required for connecting to our database and then pass it into the chart so that it gets provisioned automatically (see chart docs for details).</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">grafana-datasource-secret.yaml</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grafana-datasource-secret</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+  <span class="nt">other_datasource.yaml</span><span class="p">:</span> <span class="p p-Indicator">|-</span>
+    <span class="no">apiVersion: 1</span>
+    <span class="no">datasources:</span>
+      <span class="no">- name: sensor_db</span>
+        <span class="no">type: postgres</span>
+        <span class="no">url: postgres-postgresql.default.svc.cluster.local</span>
+        <span class="no">database: sensor_data</span>
+        <span class="no">user: dripline</span>
+        <span class="no">secureJsonData:</span>
+          <span class="no">password: &quot;dripline&quot;</span>
+        <span class="no">jsonData:</span>
+          <span class="no">sslmode: &quot;disable&quot; # disable/require/verify-ca/verify-full</span>
+          <span class="no">maxOpenConns: 0         # Grafana v5.4+</span>
+          <span class="no">maxIdleConns: 2         # Grafana v5.4+</span>
+          <span class="no">connMaxLifetime: 14400  # Grafana v5.4+</span>
+          <span class="no">postgresVersion: 1000 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10</span>
+          <span class="no">timescaledb: false</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>is installed with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">grafana</span><span class="o">-</span><span class="n">datasource</span><span class="o">-</span><span class="n">secret</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>and then the chart itself is configured with</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">grafana.values.yaml</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">admin</span><span class="p">:</span>
+  <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+  <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dripline</span>
+<span class="nt">datasources</span><span class="p">:</span>
+  <span class="nt">secretName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grafana-datasource-secret</span>
+<span class="nt">persistence</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>and released with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">grafana</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">grafana</span> <span class="o">-</span><span class="n">f</span> <span class="n">grafana</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To access grafana on a local cluster, you can use <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">port-forward</span> <span class="pre">&lt;pod&gt;</span></code> to bind a local port to the container.
+For production clusters you will most likely want to configure an ingress controller; configuring that is well beyond the scope of this guide and highly dependent on your particular cluster’s environment.
+Once that is done, it should be a simple matter of populating the chart’s <code class="docutils literal notranslate"><span class="pre">ingress</span></code> configuration block.</p>
+</div>
+</div>
+<div class="section" id="other-notes">
+<h2>Other Notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h2>
+<p>Before concluding, we’ll leave you with some patterns and notes that we’ve found to be useful.</p>
+<ul class="simple">
+<li><p>At times you may want to turn services on and off. Rather than delete and re-releasing the instance of the chart, it is often useful to scale the number of replicas between 0 and 1. This retains the details of the release and continues to list the chart when using various inspection commands.</p></li>
+<li><p>Similarly, because the containers are deployed as kubernetes <code class="docutils literal notranslate"><span class="pre">Deployment</span></code> objects, the system will monitor the number of running pods and restore them. If you want to quickly restart something, you can use <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">delete</span> <span class="pre">pods</span> <span class="pre">...</span></code> to delete the running pod and let the controller immediately recreate it.</p></li>
+<li><p>If you want to use the dripline command line interface tools, you can use <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">exec</span> <span class="pre">..</span></code> to start a shell in a running pod. This may be easier than installing the tools locally, especially because the authentication secret will be available. Note, however, that if the main service process ends then your shell will terminate with an undefined error behavior.</p></li>
+<li><p>There are many more third-party tools from the cloud ecosystem which you may find useful for monitoring the health of your controls system.</p>
+<ul>
+<li><p>We’ve found <a class="reference external" href="https://github.com/coreos/prometheus-operator">prometheus-operator</a> (deployable from a helm chart per the README) very useful for monitoring the health of the underlying kubernetes cluster and compute hardware.</p></li>
+<li><p>The <a class="reference external" href="https://www.elastic.co/elastic-stack?ultron=[EL]-[B]-[Trials]-[AMER]-[US-W]-Exact&amp;blade=adwords-s&amp;Device=c&amp;thor=elk%20stack&amp;gclid=Cj0KCQjwhtT1BRCiARIsAGlY51K3Kdpj_ZQmcAgcHLEs0JqUGK2gCiAJ-IDzXM1SmCXGM2dNwGukzHcaAhT-EALw_wcB">ELK stack</a> is a helpful way to aggreate logs from many services.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/guides/second-mesh.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
