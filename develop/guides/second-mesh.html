@@ -110,7 +110,7 @@ For the purposes of this guide, we’ve prioritized ease of configuration to sim
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>In order to follow this tutorial you will need to have several resources available:</p>
 <dl class="glossary simple">
-<dt id="term-A-running-kubernetes-environment.">A running kubernetes environment.</dt><dd><p>This tutorial is being written and tested using kubernetes 1.15.5 as shipped with docker desktop CE (2.2.0.5) on MacOS. It is not expected to be very sensitive to those versions, but check the release notes if you differ widely or have issues.</p>
+<dt id="term-A-running-kubernetes-environment.">A running kubernetes environment.</dt><dd><p>This tutorial was developed on kubernetes 1.17 deployed on bare metal and tested using both kubernetes 1.18.2 on bare metal and kubernetes 1.15.5 from docker desktop CE (2.2.0.5) on MacOS. It is not expected to be very sensitive to those versions, but check the release notes for your k8s version as well as requirements of each chart used if you encounter issues.</p>
 </dd>
 <dt id="term-The-helm-tool.">The <a class="reference external" href="https://helm.sh">helm</a> tool.</dt><dd><p>Development and testing is being done on version 3.2.0, version 2 is not supported.</p>
 </dd>
@@ -246,7 +246,7 @@ Also note that we pass in the name of the secret created in the prior step.</p>
 
 <span class="nt">rabbitmqSecretName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rabbitmq-authentications-secret</span>
 
-<span class="nt">command</span><span class="p">:</span> <span class="s">&#39;[&quot;dl-serve&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;/etc/config/config_file.yaml&quot;,</span><span class="nv"> </span><span class="s">&quot;-v&quot;,</span><span class="nv"> </span><span class="s">&quot;-b&quot;,</span><span class="nv"> </span><span class="s">&quot;rabbitmq-app.default.svc.cluster.local&quot;]&#39;</span>
+<span class="nt">command</span><span class="p">:</span> <span class="s">&#39;[&quot;dl-serve&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;/etc/config/config_file.yaml&quot;,</span><span class="nv"> </span><span class="s">&quot;-v&quot;,</span><span class="nv"> </span><span class="s">&quot;-b&quot;,</span><span class="nv"> </span><span class="s">&quot;rabbitmq.default.svc.cluster.local&quot;]&#39;</span>
 
 <span class="nt">configFileData</span><span class="p">:</span>
   <span class="nt">runtime-config</span><span class="p">:</span>
@@ -456,7 +456,7 @@ The values file follows the same considerations as for the <code class="docutils
 </div>
 <div class="section" id="visualization">
 <h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
-<p>We again install grafana to use for looking at our daata.
+<p>We again install grafana to use for looking at our data.
 We use a kubernetes manifest to create a secret with the datasource configuration required for connecting to our database and then pass it into the chart so that it gets provisioned automatically (see chart docs for details).</p>
 <div class="literal-block-wrapper docutils container" id="id7">
 <div class="code-block-caption"><span class="caption-text">grafana-datasource-secret.yaml</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
