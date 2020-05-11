@@ -449,7 +449,7 @@ The values file follows the same considerations as for the <code class="docutils
 </td></tr></table></div>
 </div>
 <p>Release it with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span> <span class="n">DRIPLINE_PYTHON_ROOT</span><span class="o">/</span><span class="n">chart</span> <span class="o">-</span><span class="n">f</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span><span class="o">-</span><span class="n">store</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">sensor</span><span class="o">-</span><span class="n">logger</span> <span class="n">DRIPLINE_PYTHON_ROOT</span><span class="o">/</span><span class="n">chart</span> <span class="o">-</span><span class="n">f</span> <span class="n">sensor</span><span class="o">-</span><span class="n">logger</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
 </div>
 </div>
@@ -534,7 +534,7 @@ We use a kubernetes manifest to create a secret with the datasource configuratio
 </td></tr></table></div>
 </div>
 <p>and released with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">grafana</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">grafana</span> <span class="o">-</span><span class="n">f</span> <span class="n">grafana</span><span class="o">.</span><span class="n">yaml</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">grafana</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">grafana</span> <span class="o">-</span><span class="n">f</span> <span class="n">grafana</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
 </div>
 <div class="admonition note">

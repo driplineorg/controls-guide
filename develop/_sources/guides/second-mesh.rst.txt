@@ -145,7 +145,7 @@ The values file follows the same considerations as for the ``key-value-store`` s
 
 Release it with::
 
-   helm install key-value-store DRIPLINE_PYTHON_ROOT/chart -f key-value-store.values.yaml
+   helm install sensor-logger DRIPLINE_PYTHON_ROOT/chart -f sensor-logger.values.yaml
 
 Visualization
 -------------
@@ -171,7 +171,7 @@ and then the chart itself is configured with
 
 and released with::
 
-   helm install grafana bitnami/grafana -f grafana.yaml
+   helm install grafana bitnami/grafana -f grafana.values.yaml
 
 .. note::
 
