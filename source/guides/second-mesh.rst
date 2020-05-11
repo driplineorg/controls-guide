@@ -18,7 +18,7 @@ In order to follow this tutorial you will need to have several resources availab
 .. glossary::
 
   A running kubernetes environment.
-    This tutorial is being written and tested using kubernetes 1.15.5 as shipped with docker desktop CE (2.2.0.5) on MacOS. It is not expected to be very sensitive to those versions, but check the release notes if you differ widely or have issues.
+    This tutorial was developed on kubernetes 1.17 deployed on bare metal and tested using both kubernetes 1.18.2 on bare metal and kubernetes 1.15.5 from docker desktop CE (2.2.0.5) on MacOS. It is not expected to be very sensitive to those versions, but check the release notes for your k8s version as well as requirements of each chart used if you encounter issues.
 
   The `helm <https://helm.sh>`_ tool.
     Development and testing is being done on version 3.2.0, version 2 is not supported.
@@ -150,7 +150,7 @@ Release it with::
 Visualization
 -------------
 
-We again install grafana to use for looking at our daata.
+We again install grafana to use for looking at our data.
 We use a kubernetes manifest to create a secret with the datasource configuration required for connecting to our database and then pass it into the chart so that it gets provisioned automatically (see chart docs for details).
 
 .. literalinclude:: ../../examples/second-mesh/grafana-datasource-secret.yaml
