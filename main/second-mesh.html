@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>&lt;no title&gt; &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/DL3Logo.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/DL3Logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/guides.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging-data.html">Logging Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-management.html">Process Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command-line-tools.html">Command Line Tools</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>See <a class="reference external" href="https://driplineorg.github.io/controls-guide/develop/guides/first-mesh.html">https://driplineorg.github.io/controls-guide/develop/guides/first-mesh.html</a> for the tutorial.</p>
+<p>To run</p>
+<ol class="arabic">
+<li><p>Install rabbitmq. One possibility is to install through helm. See: <a class="reference external" href="https://hub.helm.sh/charts/bitnami/rabbitmq">https://hub.helm.sh/charts/bitnami/rabbitmq</a>
+So you would run something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">repo</span> <span class="n">add</span> <span class="n">bitnami</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">charts</span><span class="o">.</span><span class="n">bitnami</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">bitnami</span>
+<span class="n">helm</span> <span class="n">install</span> <span class="n">rabbitmq</span><span class="o">-</span><span class="n">app</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">rabbitmq</span> <span class="o">-</span><span class="n">f</span> <span class="n">rabbitmq</span><span class="o">-</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>Change rabbitmq-values.yaml for desired credentials and additional configuration. One might also look into rabbitmq-ha.</p>
+</li>
+<li><p>Create Kubernetes secret that contains your rabbitmq credentials. Edit rabbitmq-authentications-secret.yaml to include your rabbitmq cluster url and your rabbitmq login credentials. For documentation about secrets, see: <a class="reference external" href="https://kubernetes.io/docs/concepts/configuration/secret/">https://kubernetes.io/docs/concepts/configuration/secret/</a></p></li>
+<li><p>install chart and kv-store runtime-configuration with helm. Run a command similar to</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">helm</span> <span class="n">install</span> <span class="n">kv</span><span class="o">-</span><span class="n">store</span> <span class="n">chart</span><span class="o">/</span> <span class="o">-</span><span class="n">f</span> <span class="n">example</span><span class="o">/</span><span class="n">k8s</span><span class="o">/</span><span class="n">kv</span><span class="o">-</span><span class="n">store</span><span class="o">-</span><span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>For more information about helm, see: <a class="reference external" href="https://helm.sh/docs/">https://helm.sh/docs/</a>.</p>
+<p>The chart can be found in dripline-python/</p>
+</li>
+</ol>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/second-mesh.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

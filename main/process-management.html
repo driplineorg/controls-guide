@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Process Management &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/DL3Logo.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Security" href="security.html" />
+    <link rel="prev" title="Logging Data" href="logging-data.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/DL3Logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="guides/guides.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging-data.html">Logging Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Process Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#execution-environment">Execution Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command-line-tools.html">Command Line Tools</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="logging-data.html" title="previous chapter">Logging Data</a></li>
+      <li>Next: <a href="security.html" title="next chapter">Security</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="process-management">
+<span id="id1"></span><h1>Process Management<a class="headerlink" href="#process-management" title="Permalink to this headline">¶</a></h1>
+<p>In order to have a robust controls system it is important that software deployment be done in a robust way.
+In support of this, dripline systems are typically designed using stateless microservice design concepts.
+Here “process” is in the computing sense, i.e. an applications running on some server.</p>
+<p>A microservice means that each program has a narrow scope of responsibility, and provides an interface to that scope.
+Any problems that arise in one system should have a limited impact to only that system, and process lifecycles should be independent whenever possible.</p>
+<p>Here, “stateless” means that if the program crashes or is killed, and then restarts, operation continues as expected.
+If another service cares about the state of a system, it should confirm that that state exists each time that it cares.
+If a process sets a state elsewhere and expects that state to exist for an extended period, it should confirm the state regularly and is responsible for detecting/responding to a state change.</p>
+<div class="section" id="execution-environment">
+<h2>Execution Environment<a class="headerlink" href="#execution-environment" title="Permalink to this headline">¶</a></h2>
+<p>Driplineorg provides software for executing a controls system, which can be executed in whatever way works best for a particular use case.
+This could include user or system location installation, in or out of a python virtualenvironment or chroot, or even in or outside of a container.
+Similarly, the process execution could be done in an interactive shell, as a background process, as a daemon process, or in a container (again, with many options for management).</p>
+<p>In most dripline applications, software is deployed in docker containers (this is also the environment where we develop and test the software); you are encouraged to review the official documentation for docker (specifically, the Dockerfile and the docker command line tool).
+Further, we typically deploy containers in one of two ways:</p>
+<ol class="arabic simple">
+<li><p>A docker-compose orchestration is convenient when working with a single host and a single user.
+This is a great way to work when doing development and prototyping, and when systems do not need to run for extended periods of time.</p></li>
+<li><p>On production systems, we deploy using kubernetes.
+This requires an additional step of provisioning a kubernetes cluster, but has the advantage that it leverages the entire ecosystem of cloud-based computing developers and technologies (providing process monitoring and restart, node health monitoring, upgrade and rollbacks, node migration, etc.).</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/process-management.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
