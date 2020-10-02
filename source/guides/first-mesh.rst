@@ -24,7 +24,7 @@ If you're not familiar with compose, please review the `official documentation <
 You should also be familiar with `exec <https://docs.docker.com/compose/reference/exec/>`_ and `logs <https://docs.docker.com/compose/reference/logs/>`_ subcommands, all of these will be useful throughout this guide.
 
 If you are working through this walkthrough, you're strongly encouraged to create a directory and write all of the files yourself, exploring the options or configurable parameters, etc.
-For reference, you can find a completed set of files for this example in the `github repo for this documentation <https://github.com/driplineorg/controls-guide/tree/master/examples/first-mesh>`_.
+For reference, you can find a completed set of files for this example in the `github repo for this documentation <https://github.com/driplineorg/controls-guide/tree/main/examples/first-mesh>`_.
 
 Finally, before we dig in, a request:
 

@@ -12,7 +12,7 @@ It also provides an improved means of dealing with optional features with extra 
 
 This walkthrough goes through the process of setting up and implementing a very simple plugin to extend the KeyValueStore class with more features.
 It is focused on organization, desgin, and installation steps rather than adding complex logic for a particular use case.
-The source for a working example plugin is provided in the `github repo for this document <https://github.com/driplineorg/controls-guide/tree/master/examples/dripline-python-plugin>`_.
+The source for a working example plugin is provided in the `github repo for this document <https://github.com/driplineorg/controls-guide/tree/main/examples/dripline-python-plugin>`_.
 
 It is assumed that you've completed the :ref:`first-mesh-walkthrough` and are already comfortable with building and running dripline services in containers in a mesh.
 If not you should go review that guide before proceeding.
