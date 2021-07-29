@@ -33,6 +33,7 @@ jobs:
             doxygen \
             python3-sphinx \
             graphviz
+          pip install sphinx-multiversion
 
       - name: Output location
         run: |

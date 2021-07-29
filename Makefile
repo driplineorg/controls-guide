@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    = --color
-SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = sphinx-multiversion
 SOURCEDIR     = source
 BUILDDIR      = build
 
