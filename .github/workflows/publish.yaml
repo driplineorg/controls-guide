@@ -55,7 +55,7 @@ jobs:
               export OUTPUT_LOCATION=tags/$suffix
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
               suffix=${GITHUB_HEAD_REF#"refs/heads/"}
-              echo "Branch is $$GITHUB_HEAD_REF; directory will be $suffix"
+              echo "Branch is $GITHUB_HEAD_REF; directory will be $suffix"
               export OUTPUT_LOCATION=branches/$suffix
           fi
           echo "Output location: $OUTPUT_LOCATION"
