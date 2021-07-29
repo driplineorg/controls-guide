@@ -13,15 +13,18 @@ on:
 jobs:
 
   docs:
+  
     runs-on: ubuntu-20.04
     # This job only runs for pushed tags
     #if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    needs: [build_and_push]
+
     steps:
+
       - name: Checkout the repo 
         uses: actions/checkout@v2
         with:
           submodules: recursive
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -30,6 +33,7 @@ jobs:
             doxygen \
             python3-sphinx \
             graphviz
+
       - name: Output location
         run: |
           export OUTPUT_LOCATION="unknown"
@@ -53,12 +57,14 @@ jobs:
           echo "Output location: $OUTPUT_LOCATION"
           # Persist the output location in future steps
           echo "OUTPUT_LOCATION=$OUTPUT_LOCATION" >> $GITHUB_ENV
+
       - name: Build docs
         run: |
           cd documentation
           make html
           ls ./build/html
           mv ./build/html /tmp/build.html
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4
         with:
