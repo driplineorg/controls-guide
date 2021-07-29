@@ -60,7 +60,6 @@ jobs:
 
       - name: Build docs
         run: |
-          cd documentation
           make html
           ls ./build/html
           mv ./build/html /tmp/build.html
