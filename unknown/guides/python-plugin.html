@@ -1,0 +1,159 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python Plugin &#8212; Dripline Controls Guide  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/DL3Logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging Data" href="../logging-data.html" />
+    <link rel="prev" title="First Mesh Walkthrough" href="first-mesh.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/DL3Logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">Dripline Controls Guide</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="guides.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="first-mesh.html">First Mesh Walkthrough</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Python Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#writing-a-plugin">Writing a plugin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../logging-data.html">Logging Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../process-management.html">Process Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../command-line-tools.html">Command Line Tools</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="guides.html">Tutorials</a><ul>
+      <li>Previous: <a href="first-mesh.html" title="previous chapter">First Mesh Walkthrough</a></li>
+      <li>Next: <a href="../logging-data.html" title="next chapter">Logging Data</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="python-plugin">
+<span id="id1"></span><h1>Python Plugin<a class="headerlink" href="#python-plugin" title="Permalink to this headline">¶</a></h1>
+<p>The dripline-python library is specifically designed to be extendable using a plugin system.
+New classes implemented in a plugin are automatically added to the dripline namespace using the namespace package system.
+The are available to the provided command line applications in an integrated fashion.
+This system should make it easier for projects to develop custom code additions following good programming designs in a way which was not available under dripline version 2 implementations of dripline-python.
+It also provides an improved means of dealing with optional features with extra dependencies (both the dripline components and dependencies are bundled in the plugin package).</p>
+<p>This walkthrough goes through the process of setting up and implementing a very simple plugin to extend the KeyValueStore class with more features.
+It is focused on organization, desgin, and installation steps rather than adding complex logic for a particular use case.
+The source for a working example plugin is provided in the <a class="reference external" href="https://github.com/driplineorg/controls-guide/tree/master/examples/dripline-python-plugin">github repo for this document</a>.</p>
+<p>It is assumed that you’ve completed the <a class="reference internal" href="first-mesh.html#first-mesh-walkthrough"><span class="std std-ref">First Mesh Walkthrough</span></a> and are already comfortable with building and running dripline services in containers in a mesh.
+If not you should go review that guide before proceeding.</p>
+<div class="section" id="writing-a-plugin">
+<h2>Writing a plugin<a class="headerlink" href="#writing-a-plugin" title="Permalink to this headline">¶</a></h2>
+<p>Starting with dripline-python v4.0.0, dripline-python supports using namespace packages to add classes to the dripline namespace for use in applications.
+This model will allow individual projects to more naturally add their own customized components, including installing any extra dependencies and allowing implementations to span multiple source files in a reasonable way, while still using the common command line tools including <code class="docutils literal notranslate"><span class="pre">dl-serve</span></code>.
+The trade-off is that there is an amount of boilerplate required.</p>
+<div class="section" id="the-boilerplate">
+<h3>The boilerplate<a class="headerlink" href="#the-boilerplate" title="Permalink to this headline">¶</a></h3>
+<p>In order to add your own components, you can start with this repo as an example. The steps are:</p>
+<ol class="arabic simple">
+<li>Create a new python package (directory with a setup.py file). You can copy the setup.py file and the dripline directory structure from this repo into your own repo for this purpose, be sure to update the name and version.</li>
+<li>Add the namespace package directory structure, it requires that the <code class="docutils literal notranslate"><span class="pre">dripline</span></code> directory be empty except for its subdirectory <code class="docutils literal notranslate"><span class="pre">extensions</span></code> and that <code class="docutils literal notranslate"><span class="pre">extensions</span></code> have exactly the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file as is here.</li>
+<li>Add the directory for your actual plugin content, here  it is <code class="docutils literal notranslate"><span class="pre">dripline/extensions/jitter</span></code> but your plugin should have a different directory name of your choice (probably matching the name of your distribution package in setup.py).</li>
+<li>Within your plugin’s folder (here <code class="docutils literal notranslate"><span class="pre">dripline/extensions/jitter</span></code>), the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file must:
+1. import the classes you’ve imlemented as part of the plugin
+2. define an <code class="docutils literal notranslate"><span class="pre">__all__</span></code> list of the objects you want to add to the <code class="docutils literal notranslate"><span class="pre">dripline.extensions</span></code> namespace
+2. define a <code class="docutils literal notranslate"><span class="pre">version</span></code> data member which is a scarab.VersionSemantic() instance, here we extract the version from the python package but you can populate that object in whatever method works best for you.</li>
+<li>Optionally, copy the Dockerfile, make sure that the copy and working directory location used are unique to your plugin and confirm that the base image tag is current (or at least that you’re happy with the version being used).</li>
+<li>Implement your custom classes and run your service in the usual way, <code class="docutils literal notranslate"><span class="pre">dl-serve</span></code> will be able to find them at runtime.</li>
+</ol>
+</div>
+<div class="section" id="adding-implementations">
+<h3>Adding implementations<a class="headerlink" href="#adding-implementations" title="Permalink to this headline">¶</a></h3>
+<p>This part is entirely dependent on your particular application.
+In the case of the jitter plugin, there is one source file (<code class="docutils literal notranslate"><span class="pre">jitter_endpoints.py</span></code>), which implements a single class (<code class="docutils literal notranslate"><span class="pre">JitterEntity</span></code>).
+It inherits from KeyValueStore, but overrides the <code class="docutils literal notranslate"><span class="pre">on_get</span></code> method to behave somewhat differently; it adds a bit of random offset to the stored value whenever measured.
+This shows a method being overridden to support a custom get.
+You can also add arbitrary other functions, here <code class="docutils literal notranslate"><span class="pre">update_seed</span></code> will set the random seed used by the pseudo-random number generator.</p>
+<p>In many cases, you may find that while the provided classes don’t do everything you need, they provide close to the desired behavior.
+If you inherit from them, you should be able to replace only that functionality that you need to expand, without recreating the rest of the source code (and allowing your class to inherit any bug fixes or feature extensions the may come in future versions).</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, Driplineorg Maintainers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/guides/python-plugin.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
