@@ -70,6 +70,11 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
+# -- Sphinx-Multiversion configuration ---------------------------------------
+
+smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'            # Include tags like "v2.1.0"
+smv_branch_whitelist = r'^.*$'                # Include all branches
+smv_remote_whitelist = r'^(origin)$' # Use branches from origin and upstream
 
 # -- Options for HTML output -------------------------------------------------
 
