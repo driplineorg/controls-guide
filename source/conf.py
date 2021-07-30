@@ -40,6 +40,7 @@ release = u''
 # ones.
 extensions = [
     'sphinx.ext.githubpages',
+    'sphinx_multiversion'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -101,7 +102,11 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
+html_sidebars = {
+    '**': [
+        'versioning.html',
+    ],
+}
 
 html_logo = 'DL3Logo.png'
 html_favicon = 'DL3Logo.ico'
