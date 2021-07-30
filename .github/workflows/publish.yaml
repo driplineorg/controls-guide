@@ -65,6 +65,7 @@ jobs:
 
       - name: Build docs
         run: |
+          git fetch -a
           sphinx-multiversion --color source build
           mv ./build/html /tmp/build.html
 #          make html
