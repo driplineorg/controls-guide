@@ -65,7 +65,7 @@ jobs:
 
       - name: Build docs
         run: |
-          sphinx-multiversion -M html source build --color
+          sphinx-multiversion --color source build
           mv ./build/html /tmp/build.html
 #          make html
 #          ls ./build/html
