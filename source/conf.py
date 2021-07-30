@@ -73,8 +73,10 @@ pygments_style = None
 # -- Sphinx-Multiversion configuration ---------------------------------------
 
 smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'            # Include tags like "v2.1.0"
-smv_branch_whitelist = r'^.*$'                # Include all branches
-smv_remote_whitelist = r'^(origin)$' # Use branches from origin and upstream
+#smv_tag_whitelist = r'^.*$'                        # Include all tags
+#smv_branch_whitelist = r'^(?!master).*$'           # Include all branches
+smv_branch_whitelist = r'^(main|develop)$'
+smv_remote_whitelist = r'^(origin)$'               # Use branches from origin
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -109,6 +111,10 @@ html_static_path = ['_static']
 #
 html_sidebars = {
     '**': [
+        'globaltoc.html',
+        'relations.html',
+        'sourcelink.html',
+        'searchbox.html',
         'versioning.html',
     ],
 }
