@@ -67,7 +67,7 @@ jobs:
         run: |
           git fetch -a
           sphinx-multiversion --color source build
-          mv ./build/html /tmp/build.html
+          mv ./build /tmp/build.html
 #          make html
 #          ls ./build/html
 #          mv ./build/html /tmp/build.html
