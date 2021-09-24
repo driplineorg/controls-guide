@@ -68,9 +68,6 @@ jobs:
           git fetch -a
           sphinx-multiversion --color source build
           mv ./build /tmp/build.html
-#          make html
-#          ls ./build/html
-#          mv ./build/html /tmp/build.html
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.4

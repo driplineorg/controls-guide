@@ -40,7 +40,7 @@ release = u''
 # ones.
 extensions = [
     'sphinx.ext.githubpages',
-    'sphinx_multiversion'
+    'sphinx_multiversion',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
