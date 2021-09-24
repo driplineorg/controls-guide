@@ -6,3 +6,4 @@ Tutorials
 
    first-mesh
    python-plugin
+   second-mesh
