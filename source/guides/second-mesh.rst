@@ -26,11 +26,14 @@ In order to follow this tutorial you will need to have several resources availab
   A local clone of the `dripline-python repo <https://github.com/driplineorg/dripline-python>`_.
     We do not currently have a CI/CD pipeline established for bulding and publishing charts to a repository and so the dripline-python chart instances will be released from a local path.
     Throughout this guide, we assume that is located at ``DRIPLINE_PYTHON_ROOT``.
+    Example::
+
+      export DRIPLINE_PYTHON_ROOT=/<your git path>/dripline-python
 
 Deployment
 ----------
 
-The complete set of configuration files used here are available in the `github repo for this documentation <https://github.com/driplineorg/controls-guide/tree/master/examples/second-mesh>`_.
+The complete set of configuration files used here are available in the `github repo for this documentation <https://github.com/driplineorg/controls-guide/tree/main/examples/second-mesh>`_.
 There the values override files for releases of charts are named following the pattern ``RELEASE_NAME.values.yaml`` (where RELEASE_NAME is replaced in each case).
 
 For third-party applications we'll use helm charts provided and maintained by bitnami.
@@ -93,9 +96,9 @@ Also note that we pass in the name of the secret created in the prior step.
    :language: yaml
    :linenos:
 
-We deploy the release following the same patter, with::
+We deploy the release following the same pattern, with::
 
-   helm install key-value-store DRIPLINE_PYTHON_ROOT/chart -f key-value-store.values.yaml
+   helm install key-value-store $DRIPLINE_PYTHON_ROOT/chart -f key-value-store.values.yaml
 
 A pause for demonstration
 +++++++++++++++++++++++++
@@ -109,14 +112,14 @@ First, let's take a look at the releases we've created, ``helm list`` will list 
   key-value-store default         1               2020-05-08 21:05:40.240297 -0700 PDT    deployed        dripline-python-1.2.0   v4.4.2-amd64
   rabbitmq        default         1               2020-05-08 21:04:47.707076 -0700 PDT    deployed        rabbitmq-6.25.9         3.8.3
 
-We can also inspect the kubernetes pod bojects with ``kubectl get pods``, which produces complementary information::
+We can also inspect the kubernetes pod objects with ``kubectl get pods``, which produces complementary information::
 
   NAME                                                          READY   STATUS    RESTARTS   AGE
   key-value-store-dripline-python-deployment-78dfb7f6c5-gzl5k   1/1     Running   0          6s
   rabbitmq-0                                                    1/1     Running   0          5m23s
 
 If you want to see the logs from a running service, use ``kubectl logs -f <pod-name>`` (you may also find the ``--tail`` flag useful for pods that have been running for a while, see the docs for more explanation and options).
-You can use ``kubectl exec ...`` to launch a shell in the running container and use the dripline command line interface to interact with the service in the same way as you did in the first mesh tutorial.
+You can use ``kubectl exec -it <pod-name> bash`` to launch a shell in the running container and use the dripline command line interface to interact with the service in the same way as you did in the first mesh tutorial.
 
 Historical data storage
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,7 +139,7 @@ and we deploy it with the now familar command::
   helm install postgres bitnami/postgresql -f postgres.values.yaml
 
 We also again deploy a ``sensor-logger`` dripline service to consume alert messages and populate the database.
-The values file follows the same considerations as for the ``key-value-store`` service above
+The values file follows the same considerations as for the ``key-value-store`` service above.
 
 .. literalinclude:: ../../examples/second-mesh/sensor-logger.values.yaml
    :caption: sensor-logger.values.yaml
@@ -145,7 +148,7 @@ The values file follows the same considerations as for the ``key-value-store`` s
 
 Release it with::
 
-   helm install sensor-logger DRIPLINE_PYTHON_ROOT/chart -f sensor-logger.values.yaml
+   helm install sensor-logger $DRIPLINE_PYTHON_ROOT/chart -f sensor-logger.values.yaml
 
 Visualization
 -------------
