@@ -40,6 +40,7 @@ release = u''
 # ones.
 extensions = [
     'sphinx.ext.githubpages',
+    'sphinx_multiversion',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -69,6 +70,13 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
+# -- Sphinx-Multiversion configuration ---------------------------------------
+
+smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'            # Include tags like "v2.1.0"
+#smv_tag_whitelist = r'^.*$'                        # Include all tags
+#smv_branch_whitelist = r'^(?!master).*$'           # Include all branches
+smv_branch_whitelist = r'^(main|develop)$'
+smv_remote_whitelist = r'^(origin)$'               # Use branches from origin
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -101,7 +109,15 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
+html_sidebars = {
+    '**': [
+        'globaltoc.html',
+        'relations.html',
+        'sourcelink.html',
+        'searchbox.html',
+        'versioning.html',
+    ],
+}
 
 html_logo = 'DL3Logo.png'
 html_favicon = 'DL3Logo.ico'
