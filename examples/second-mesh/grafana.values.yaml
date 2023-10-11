@@ -1,0 +1,7 @@
+admin:
+  user: dripline
+  password: dripline
+datasources:
+  secretName: grafana-datasource-secret
+persistence:
+  enabled: false

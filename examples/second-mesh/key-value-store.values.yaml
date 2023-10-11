@@ -1,8 +1,10 @@
 replicaCount: 1
 
-command: '["dl-serve", "-c", "/etc/config/config_file.yaml", "-v", "-b", "rabbitmq-app.default.svc.cluster.local"]'
+rabbitmqSecretName: rabbitmq-authentications-secret
 
-configFileData: 
+command: '["dl-serve", "-c", "/etc/config/config_file.yaml", "-v", "-b", "rabbitmq.default.svc.cluster.local"]'
+
+configFileData:
   runtime-config:
     name: my_store
     module: Service
@@ -24,5 +26,5 @@ configFileData:
         #log_interval: 30
         #log_on_set: True
         calibration: '1.*{}'
-        initial_value: 4.00 
-  
+        initial_value: 4.00
+

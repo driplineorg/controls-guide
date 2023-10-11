@@ -1,0 +1,31 @@
+replicaCount: 1
+
+rabbitmqSecretName: rabbitmq-authentications-secret
+
+configFileData:
+  runtime-config:
+    name: sensor_data_logger
+    module: PostgresSensorLogger
+    auth_file: /etc/rabbitmq-secret/authentications.json
+    # SensorLogger Inits
+    insertion_table_endpoint_name: values_table
+    # AlertConsumer Inits
+    alert_keys:
+      - "sensor_value.#"
+    alert_key_parser_re: 'sensor_value\.(?P<sensor_name>\w+)'
+    # PostgreSQLInterface Inits
+    database_name: sensor_data
+    database_server: postgres-postgresql.default.svc.cluster.local
+    #this is bad... waiting on a scarab update to let us pass
+    #               actual details via env vars
+    auths_file: "/etc/rabbitmq-secret/authentications.json"
+    endpoints:
+      - name: values_table
+        module: SQLTable
+        table_name: numeric_data
+        required_insert_names:
+          - sensor_name
+          - timestamp
+          - value_raw
+        optional_insert_names:
+          - value_cal
