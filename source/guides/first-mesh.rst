@@ -17,18 +17,19 @@ Here we will create a very simple mesh, which includes:
 
 We will try to call attention to places where decisions made here are for convenience of example, vs decisions recommended practice.
 
+.. note::
+  If you are working through this walkthrough, you're strongly encouraged to create a directory and write all of the files yourself, exploring the options or configurable parameters, etc.
+  For reference, you can find a completed set of files for this example in the `github repo for this documentation <https://github.com/driplineorg/controls-guide/tree/master/examples/first-mesh>`_.
+
 Our first big decision comes before we get started and is a question of how we will deploy and manage our software.
 There is more discussion in the section on :ref:`process management<process-management>`.
 In this example, we will use ``docker-compose`` to define and deploy our collection of applications.
 If you're not familiar with compose, please review the `official documentation <https://docs.docker.com/compose/gettingstarted/>`_ and work through the examples there.
 You should also be familiar with `exec <https://docs.docker.com/compose/reference/exec/>`_ and `logs <https://docs.docker.com/compose/reference/logs/>`_ subcommands, all of these will be useful throughout this guide.
 
-If you are working through this walkthrough, you're strongly encouraged to create a directory and write all of the files yourself, exploring the options or configurable parameters, etc.
-For reference, you can find a completed set of files for this example in the `github repo for this documentation <https://github.com/driplineorg/controls-guide/tree/master/examples/first-mesh>`_.
-
 Finally, before we dig in, a request:
 
-* Where possible, this documentation is directly importing file contents from the working example files. If something looks wrong or doesn't match, it is possible that the ``literalinclude`` statements were not updated after the example was updated, please let us know by posting an issue (or even better, for the repo and send us a PR with the correction; documentation is a group effort).
+* If something looks wrong or isn't working, please let us know by posting an issue (or even better, for the repo and send us a PR with the correction; documentation is a group effort).
 
 * Throughout this and all examples, we have tried to pin versions (specifically container image versions) so that the examples are reproducible over time. An excellent exercise would be to explore cases where there are newer versions and the capabilities those may enable (and again, send us a PR if you find something helpful).
 
@@ -155,14 +156,14 @@ Create the database
 
 For our database, we will use the community supported postgres database container; you can find a description of the use of this container in `the official documentation, hosted with the container <https://hub.docker.com/_/postgres>`_.
 We create a single database with a single table for storing our endpoint values in a subdirectory next to our ``docker-compose.yaml`` file (and shortly will be mounting that directory into the container).
-The database setup file looks like:
+You will need to add a database-setup file in a subdirectory called `postgres_init.d`.  The database setup file looks like:
 
 .. literalinclude:: ../../examples/first-mesh/postgres_init.d/10_setup.sql
    :caption: postgres_init.d/10_setup.sql
    :language: psql
    :linenos:
 
-We then add it to our compose file as another service.
+We then add the postgres container to our compose file as another service.
 In the minimal case that looks like the following block, in a more production-like environment, the database's storage location would need to be persistanat so that data are not lost when the container stops.
 
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
@@ -200,10 +201,18 @@ Data visualization
 ++++++++++++++++++
 
 Having a database full of values is great, but in most cases you will also want some interactive way to see and explore the data.
-In principle we could build such a tool ourselves, but this is another place where we will leverage the freely available tools from the open source community; specifically we add an instance of `grafana <https://grafana.com>`_ (again per usual, you can get lots of details from the official website, or from the `main docker hub page <https://hub.docker.com/r/grafana/grafana/>`_ related to the container we will add.
+In principle we could build such a tool ourselves, but this is another place where we will leverage the freely available tools from the open source community; specifically we add an instance of `grafana <https://grafana.com>`_.  You can get lots of details from the official website, or from the `main docker hub page <https://hub.docker.com/r/grafana/grafana/>`_ related to the container we will add.
 
-Similar to postgres, we can provide grafana with configuration files which set its initial configuration and provision capabilities (including the details for how to connect to the database).
-Feel free to explore those files or the description provided in the official documentation, here we proceed with the compose service
+Grafana needs input on how to configure itself and how to connect to the database.  Start by creating a subdirectory in your walkthrough location for grafana called `grafana.d`.
+Copy the configuration file provided with the walkthrough to the new directory; it's located at `examples/first-mesh/grafana.d/grafana.ini` in the controls_guide repository or `here <https://github.com/driplineorg/controls-guide/blob/main/examples/first-mesh/grafana.d/grafana.ini>`_ on GitHub. 
+To connect to the database, we add a YAML configuration file at `grafana.d/provisioning/datasources/postgres.yaml`:
+
+.. literalinclude:: ../../examples/first-mesh/grafana.d/provisioning/datasources/posgres.yaml
+   :caption: grafana.d/provisioning/datasources/postgres.yaml
+   :languague: yaml
+   :linenos:
+
+Now we proceed with the compose service:
 
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
    :caption: docker-compose.yaml
