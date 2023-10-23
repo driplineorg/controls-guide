@@ -14,12 +14,12 @@ Welcome to Dripline Controls Guide's documentation!
    logging-data
    process-management
    security
-
+   command-line-tools
 
 .. toctree::
-   :hidden:
+   :caption: Links:
 
-   command-line-tools
+   Back to Dripline Home <https://driplineorg.github.io>
 
 Indices and tables
 ==================
