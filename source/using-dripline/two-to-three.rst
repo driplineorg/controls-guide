@@ -79,3 +79,23 @@ You'll need to make at least the following changes:
    * - Example service that stores values in a dictionary
      - ``kv_store`` (dragonfly)
      - ``KeyValueStore``
+
+.. list-table:: Python API
+   :widths: 50 25 25
+   :header-rows: 1
+
+   * - Description
+     - Dripline v2 / Dragonfly
+     - Dripline v3
+   * - Sending a reply by raising an exception
+     - ``raise exceptions.Dripline[ErrorType]('[message]')``
+     - ``raise ThrowReply('error_type', '[message]')``
+
+..
+   .. list-table:: C++ API
+      :widths: 50 25 25
+      :header-rows: 1
+   
+      * - Description
+        - Dripline v2 / Dragonfly
+        - Dripline v3
