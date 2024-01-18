@@ -33,17 +33,17 @@ if __name__ == "__main__":
 
     # Example SCPI queries
     print("Querying instrument identity")
-    print(f'Response: client.query("*IDN?")')
+    print(f'Response: {client.query("*IDN?")}')
 
     print("Querying available options")
-    print(f'Response: client.query("*OPT?")')
+    print(f'Response: {client.query("*OPT?")}')
 
     print("Querying measurement reading")
-    print(f'Response: client.query("READ?")')
+    print(f'Response: {client.query("READ?")}')
 
     print("Querying voltage setting")
-    print(f'Response: client.query("VOLTage?")')
+    print(f'Response: {client.query("VOLTage?")}')
 
     print("Querying frequency setting")
-    print(f'Response: client.query("FREQ?")')
+    print(f'Response: {client.query("FREQ?")}')
 

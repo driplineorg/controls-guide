@@ -6,6 +6,11 @@ import re
 
 
 class SCPICommand:
+    """
+    This class represents a single SCPI get/set command pair.
+
+    It can be specified as read-only, in which case the client cannot set a value.
+    """
     def __init__(self, command, value, read_only=False):
         self.command = command
         
@@ -19,17 +24,31 @@ class SCPICommand:
         self.value = value
         self.read_only = read_only
 
-    def handle(self, command_tokens):
-        if not self.compare(command_tokens[0]):
+    def handle(self, query):
+        """
+        Checks whether this command should handle the incoming query.
+
+        Returns a 2-element tuple.  
+        The first element specifies whether this command handled the query.
+        The second element specifies the return value (if any).
+
+        If not, it returns (False, None)
+
+        If it should handle the query, the first return element is always True.
+        A get query will return (True, value)
+        A set query will return (True, None)
+        """
+        query_tokens = query.split()
+        if not self.compare(query_tokens[0]):
             return False, None
         
-        if command_tokens[0][-1] == '?':
+        if query_tokens[0][-1] == '?':
             return self.get()
         
         if self.read_only:
             raise RuntimeError(f'Command {self.command} is read-only')
         
-        return self.set(command_tokens)
+        return self.set(query_tokens)
 
     def compare(self, command):
         command = command.lstrip('*').rstrip('?').casefold()
@@ -44,7 +63,9 @@ class SCPICommand:
 
 class ASCPIDevice:
     """
-    This class represents a SCPI-compliant device.
+    This class represents a semi-SCPI-compliant device.
+
+    Note that it does not pay attention to the tree hierarchy of commands, or handle multiple simultaneous commands.
 
     Note that you won't use a class like this in an actual Dripline deployment --- 
     this takes the place of an actual device for the purpose of this tutorial.
@@ -58,7 +79,7 @@ class ASCPIDevice:
 
         self.ending = ending
 
-        self.commands = [ SCPICommand(key, value) for (key, value) in commands ]
+        self.commands = [ SCPICommand(key, value) for key, value in commands.items() ]
 
         signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -66,6 +87,9 @@ class ASCPIDevice:
         self.disconnect()
     
     def start(self):
+        """
+        Start the device: listens on the network for incoming queries.
+        """
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.socket:
             self.socket.bind((self.host, self.port))
             while self.socket.fileno() > 0:
@@ -84,10 +108,13 @@ class ASCPIDevice:
         print("Disconnected")
 
     def handle_query(self, query):
-        tokens = query.split()
+        """
+        Checks the query against all commands this device knows about.
+        Stops checking when a responses is returned.
+        """
         try:
             for command in self.commands:
-                success, response = command.handle(tokens)
+                success, response = command.handle(query)
                 if success:
                     return str(response)
             return "Invalid request"
@@ -127,5 +154,5 @@ if __name__ == "__main__":
         'FREQuency': 1.05457,
     }
 
-    scpi_handler = ASCPIDevice(host, port)
+    scpi_handler = ASCPIDevice(host, port, commands)
     scpi_handler.start()
