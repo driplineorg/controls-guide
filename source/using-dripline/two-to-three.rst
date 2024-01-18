@@ -17,28 +17,7 @@ New Features and Changes
 * Large requests can be split into multiple individual messages.
 * An automatic heartbeat (in the form of an alert message) has been added to each service.
 * Exceptions raised in Python or thrown in C++ result in reply messages being sent using ``ThrowReply`` and ``throw_reply`` in Python and C++, respectively.
-* In C++, the following classes can be used by client code:
-    * ``agent`` -- sending messages
-    * ``endpoint`` -- basic receiving and processing messages
-    * ``hub`` -- adding a dripline API to an existing codebase
-    * ``monitor`` -- monitor message traffic
-    * ``relayer`` -- perform asyncronous message sending
-    * ``scheduler`` -- schedule and execute one-off or repeating scheduled events
-    * ``service`` -- main dripline microservice potentially with child endpoints
-* In Python, the following classes can be used by client code:
-    * Core
-        * ``AlertConsumer`` -- Receive alert messages
-        * ``Endpoint`` -- Basic receiving and processing messages
-        * ``Entity`` -- An endpoint that 
-        * ``Interface`` -- Client interface for sending messages
-        * ``Scheduler`` -- Schedule and execute one-off or repeating scheduled events
-        * ``Service`` -- Main dripline microservice potentially with child endpoints
-    * Implementations
-        * ``SimpleSCPIEntity`` and others -- Endpoints that handle SCPI requests
-        * ``EthernetSCPIService`` -- Service that communicates with a SCPI device
-        * ``KeyValueStore`` -- Example service, storing values in a dictionary structure
-        * ``PostgresSQLInterface`` -- Service that interacts with a PostgresQL database
-        * ``PostgresSensorLogger`` -- Receives messages that should be logged into a database
+
 
 Moving from Dripline v2 to v3
 ------------------------------
