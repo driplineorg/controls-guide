@@ -1,0 +1,24 @@
+runtime-config:
+  name: my_device
+  module: EthernetSCPIService
+  auth_file: /root/authentications.json
+  socket_info: '127.0.0.1:24596'
+  command_terminator: '\\n'
+  response_terminator: '\\n'
+  endpoints:
+        - name: idn
+          module: SimpleSCPIEntity
+          base_str: IDN
+        - name: opt
+          module: SimpleSCPIEntity
+          base_str: OPT
+        - name: READ
+          module: SimpleSCPIEntity
+          base_str: READ
+        - name: voltage
+          module: SimpleSCPIEntity
+          base_str: VOLTage
+        - name: frequency
+          module: SimpleSCPIEntity
+          base_str: FREQuency
+
