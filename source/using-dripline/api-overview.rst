@@ -17,14 +17,14 @@ Python
 ------
 
 The following classes can be used by client code:
-* Core
+* Core -- ``dripline.core``
     * ``AlertConsumer`` -- Receive alert messages
     * ``Endpoint`` -- Basic receiving and processing messages
     * ``Entity`` -- An endpoint that 
     * ``Interface`` -- Client interface for sending messages
     * ``Scheduler`` -- Schedule and execute one-off or repeating scheduled events
     * ``Service`` -- Main dripline microservice potentially with child endpoints
-* Implementations
+* Implementations -- ``dripline.implementations``
     * ``SimpleSCPIEntity`` and others -- Endpoints that handle SCPI requests
     * ``EthernetSCPIService`` -- Service that communicates with a SCPI device
     * ``KeyValueStore`` -- Example service, storing values in a dictionary structure
