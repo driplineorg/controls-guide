@@ -79,7 +79,8 @@ class ASCPIDevice:
 
         self.ending = ending
 
-        self.commands = [ SCPICommand(key, value) for key, value in commands.items() ]
+        #self.commands = [ SCPICommand(key, value) for key, value in commands.items() ]
+        self.commands = [ SCPICommand(**command_args) for command_args in commands]
 
         signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -146,13 +147,13 @@ if __name__ == "__main__":
     host = "127.0.0.1" 
     port = 24596
 
-    commands = {
-        'IDN': 'Instrument Model XYZ,1234,1.0,Serial123456',
-        'OPT': 'Option1,Option2,Option3',
-        'READ': 42.0,
-        'VOLTage': 3.14,
-        'FREQuency': 1.05457,
-    }
+    commands = [
+        {'command': 'IDN', 'value': 'Instrument Model XYZ,1234,1.0,Serial123456', 'read_only': True},
+        {'command': 'OPT', 'value': 'Option1,Option2,Option3', 'read_only': True},
+        {'command': 'READ', 'value': 42.0},
+        {'command': 'VOLTage', 'value': 3.14},
+        {'command': 'FREQuency', 'value': 1.05457},
+    ]
 
     scpi_handler = ASCPIDevice(host, port, commands)
     scpi_handler.start()
