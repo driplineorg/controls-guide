@@ -5,6 +5,7 @@ C++
 ---
 
 The following classes can be used by client code:
+
 * ``agent`` -- sending messages
 * ``endpoint`` -- basic receiving and processing messages
 * ``hub`` -- adding a dripline API to an existing codebase
@@ -17,7 +18,8 @@ Python
 ------
 
 The following classes can be used by client code:
-* Core -- ``dripline.core``
+
+* Core -- :py:mod:`dripline.core`
     * ``AlertConsumer`` -- Receive alert messages
     * ``Endpoint`` -- Basic receiving and processing messages
     * ``Entity`` -- An endpoint that 
