@@ -20,7 +20,7 @@ Python
 The following classes can be used by client code:
 
 * Core -- :py:mod:`dripline.core`
-    * ``AlertConsumer`` -- Receive alert messages
+    * :py:mod:`dripline.core.alert_consumer` -- Receive alert messages
     * ``Endpoint`` -- Basic receiving and processing messages
     * ``Entity`` -- An endpoint that 
     * ``Interface`` -- Client interface for sending messages
