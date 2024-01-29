@@ -21,9 +21,9 @@ The following classes can be used by client code:
 
 * Core -- :py:mod:`dripline.core`
     * :py:mod:`dripline.core.alert_consumer` -- Receive alert messages
-    * ``Endpoint`` -- Basic receiving and processing messages
-    * ``Entity`` -- An endpoint that 
-    * ``Interface`` -- Client interface for sending messages
+    * :py:mod:`dripline-python.core.endpoint` -- Basic receiving and processing messages
+    * :py:class:`dripline.core.Entity` -- An endpoint that 
+    * :py:class:`dripline-python.core.Interface` -- Client interface for sending messages
     * ``Scheduler`` -- Schedule and execute one-off or repeating scheduled events
     * ``Service`` -- Main dripline microservice potentially with child endpoints
 * Implementations -- ``dripline.implementations``
