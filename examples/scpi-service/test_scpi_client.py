@@ -1,7 +1,6 @@
 #! /usr/bin/env python 
 
 import socket
-import time
 
 class SCPIClient:
     def __init__(self, host, port, ending='\n'):
@@ -24,11 +23,8 @@ class SCPIClient:
                 break
         return data
 
- 
-if __name__ == "__main__":
-    host = "127.0.0.1" 
-    port = 24596
 
+def main(host="127.0.0.1", port=24596):
     client = SCPIClient(host, port)
 
     # Example SCPI queries
@@ -47,3 +43,7 @@ if __name__ == "__main__":
     print("Querying frequency setting")
     print(f'Response: {client.query("FREQ?")}')
 
+
+if __name__ == "__main__":
+    import sys
+    main(*sys.argv[1:])

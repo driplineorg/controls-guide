@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  rabbit-broker:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=dripline
+      - RABBITMQ_DEFAULT_PASS=dripline
+
+  scpi-device:
+    image: python:3.12.1-slim-bookworm
+    volumes:
+      - ./scpi_device.py:/root/scpi_device.py
+    command: 
+      - /root/scpi_device.py
+      - scpi-device
+
+#  scpi-client:
+#    image: python:3.12.1-slim-bookworm
+#    depends_on:
+#      - scpi-device
+#    volumes:
+#      - ./test_scpi_client.py:/root/test_scpi_client.py
+#    command: 
+#      - /root/test_scpi_client.py
+#      - scpi-device
+
+  scpi-service:
+    image: driplineorg/dripline-python:v4.5.8-dev
+    depends_on:
+      - rabbit-broker
+      - scpi-device
+    volumes:
+      - ./authentications.json:/root/authentications.json
+      - ./scpi-device.yaml:/root/scpi-device.yaml
+    command:
+      - dl-serve
+      - -vvv
+      - -c
+      - /root/scpi-device.yaml
