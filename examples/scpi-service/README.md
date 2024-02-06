@@ -2,12 +2,11 @@
 
 ## Introduction: ``ASCPIDevice``
 
-The class `ASCPIDevice` (in scpi_device.py) is a simulation of a semi-SCPI-compliant device.  
-The SCPI queries to which the devicer responds can be configured at runtime via an init argument.  
+The class `ASCPIDevice` (in scpi_device.py) is a simulation of a semi-SCPI-compliant device.  The SCPI queries 
+to which the devicer responds can be configured at runtime via an init argument.  
 
 This service is intended to enable users to learn how to create a configuration file to run a 
-dripline service that communicates with the device.  
-The service can use out-of-the-box `EthernetSCPIService`.
+dripline service that communicates with the device.  The service can use out-of-the-box `EthernetSCPIService`.
 
 ## Usage
 
@@ -26,8 +25,8 @@ Command-line usage:
 
 ## Test Client
 
-A client module is provided that communicates with `ASCPIDevice` without using dripline features.  
-The `test_scpi_client.py` module can be run as a script after starting the device as above:
+A client module is provided that communicates with `ASCPIDevice` without using dripline features.  The 
+`test_scpi_client.py` module can be run as a script after starting the device as above:
 
     > ./test_scpi_client.py
 
@@ -35,8 +34,8 @@ The executable element of the macro will call the default commands that the `scp
 
 ## Use in a Dripline Mesh
 
-A docker-compose file is provided that sets up the device and service in a mesh, along with a broker.  
-The following services are included:
+A docker-compose file is provided that sets up the device and service in a mesh, along with a broker.  The 
+following services are included:
 
 * `rabbit-broker` -- The AMQP broker for the mesh
 * `scpi-device` -- The simulated device
@@ -45,19 +44,24 @@ The following services are included:
 
 You can start each container in a separate terminal/terminal tab:
 
-First start the rabbit broker in terminal 1:
+First start the rabbit broker in terminal 1 --- 
+be sure to wait for the broker to start completely before starting the service:
+
     > docker-compose up rabbit-broker
 
 Second, start the SCPI device in terminal 2:
+
     > docker-compose up scpi-device
 
 Third, start the driplien service for the SCPI device in terminal 3:
+
     > docker-compose up scpi-service
 
 Finally, use a fourth terminal to make a dripline query:
+
 ```
   > docker-compose exec scpi-service bash
-  \# dl-agent get --auth-file /root/authentications.json opt
+  # dl-agent get --auth-file /root/authentications.json opt
   [...]
   Routing key: amq.gen-lFdABKMsmjpvDpN7bAG-bQ
   Correlation ID: 8238bd83-8ff5-48b5-96cb-8c6ef66a6308
