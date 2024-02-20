@@ -3,7 +3,7 @@
 ## Introduction: ``ASCPIDevice``
 
 The class `ASCPIDevice` (in scpi_device.py) is a simulation of a semi-SCPI-compliant device.  The SCPI queries 
-to which the devicer responds can be configured at runtime via an init argument.  
+to which the device responds can be configured at runtime via an init argument.  
 
 This service is intended to enable users to learn how to create a configuration file to run a 
 dripline service that communicates with the device.  The service can use out-of-the-box `EthernetSCPIService`.
