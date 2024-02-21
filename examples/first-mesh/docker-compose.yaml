@@ -9,7 +9,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=dripline
 
   key-value-store:
-    image: driplineorg/dripline-python:v4.5.8
+    image: ghcr.io/driplineorg/dripline-python:v4.6.1
     depends_on:
       - rabbit-broker
     volumes:
@@ -21,7 +21,7 @@ services:
       - /root/key-value-store.yaml
 
   drip-mon:
-    image: driplineorg/dripline-python:v4.5.8
+    image: ghcr.io/driplineorg/dripline-python:v4.6.1
     depends_on:
       - rabbit-broker
     volumes:
@@ -50,7 +50,7 @@ services:
       - ./grafana.d:/etc/grafana
 
   sensor-logger:
-    image: driplineorg/dripline-python:v4.5.8
+    image: ghcr.io/driplineorg/dripline-python:v4.6.1
     depends_on:
       - rabbit-broker
       - postgres
@@ -61,3 +61,10 @@ services:
       - dl-serve
       - -c
       - /root/sensor-logger.yaml
+
+  slowdash:
+    image: ghcr.io/slowproj/slowdash:2402
+    volumes:
+      - ./slowdash.d:/project
+    ports:
+      - "18881:18881"
