@@ -24,7 +24,7 @@ Moving from Dripline v2 to v3
 
 The message structure and overall API (especially in Python) changed very little, so hopefully the effort to upgrade a system to the new version will be minimal.
 
-That said, the two versions are not compatible, so you cannot run a mixed-version system.
+That said, the two versions are not compatible, so you cannot run a mixed-version system.  It's possible to have parallel v2 and v3 meshes, though not recommended, even using the same broker.  However, the components on one mesh will not be able to talk to the components on the other mesh.  You would also need to ensure that endpoint names are unique between the two meshes.
 
 You'll need to make at least the following changes:
 
