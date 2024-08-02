@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  key-value-store:
+    image: ghcr.io/driplineorg/dripline-python:latest-dev
+    volumes:
+      - ../authentications.json:/root/authentications.json
+      - ../services/key-value-store.yaml:/root/key-value-store.yaml
+    command: dl-serve -vv -c /root/key-value-store.yaml
+    networks:
+      - mesh
+
+networks:
+  mesh:
+    external: TRUE

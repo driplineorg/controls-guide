@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  dl-jupyter:
+    image: dl-jupyter
+    volumes:
+      - ../authentications.json:/root/authentications.json
+    ports:
+      - "8888:8888"
+    networks:
+      - mesh
+
+networks:
+  mesh:
+    external: TRUE

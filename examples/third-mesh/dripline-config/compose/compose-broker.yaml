@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  rabbit-broker:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=dripline
+      - RABBITMQ_DEFAULT_PASS=dripline
+    networks:
+      - mesh
+    ports:
+      - "15672:15672"
+    
+networks:
+  mesh:
+    external: TRUE
+  
