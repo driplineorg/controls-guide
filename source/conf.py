@@ -78,7 +78,6 @@ intersphinx_mapping = {
     "dripline-python": ("https://dripline-python.readthedocs.io/en/latest/", None),
     "dl-home": ("https://driplineorggithubio.readthedocs.io/en/latest/", None),
 }
-}
 
 # -- Options for HTML output -------------------------------------------------
 
