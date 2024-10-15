@@ -17,7 +17,11 @@ Welcome to Dripline Controls Guide's documentation!
 .. toctree::
    :caption: Links:
 
-   Back to Dripline Home <https://driplineorg.github.io>
+   Dripline Home <https://driplineorg.github.io>
+   Guides and Walkthroughs <https://controls-guide.readthedocs.io/>
+   Protocol <https://dripline.readthedocs.io/>
+   C++ Implementation <https://dripline-cpp.readthedocs.io/>
+   Python Implementation <https://dripline-python.readthedocs.io/>
 
 Indices and tables
 ==================
