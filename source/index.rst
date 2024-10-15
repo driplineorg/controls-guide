@@ -17,7 +17,7 @@ Welcome to Dripline Controls Guide's documentation!
 .. toctree::
    :caption: Links:
 
-   Dripline Home <https://driplineorg.github.io>
+   Dripline Docs <https://driplineorg.github.io>
    Guides and Walkthroughs <https://controls-guide.readthedocs.io/>
    Protocol <https://dripline.readthedocs.io/>
    C++ Implementation <https://dripline-cpp.readthedocs.io/>
