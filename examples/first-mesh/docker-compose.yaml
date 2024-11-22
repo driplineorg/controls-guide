@@ -11,7 +11,7 @@ services:
       test: ["CMD-SHELL", "curl -u dripline:dripline http://rabbit-broker:15672/api/overview &> /dev/null || exit 1"]
 
   key-value-store:
-    image: ghcr.io/driplineorg/dripline-python:develop
+    image: ghcr.io/driplineorg/dripline-python:develop-dev
     depends_on:
       rabbit-broker:
         condition: service_healthy
@@ -28,7 +28,7 @@ services:
       - /root/key-value-store.yaml
 
   drip-mon:
-    image: ghcr.io/driplineorg/dripline-python:develop
+    image: ghcr.io/driplineorg/dripline-python:develop-dev
     depends_on:
       rabbit-broker:
         condition: service_healthy
@@ -64,7 +64,7 @@ services:
       - ./grafana.d:/etc/grafana
 
   sensor-logger:
-    image: ghcr.io/driplineorg/dripline-python:develop
+    image: ghcr.io/driplineorg/dripline-python:develop-dev
     depends_on:
       rabbit-broker:
         condition: service_healthy

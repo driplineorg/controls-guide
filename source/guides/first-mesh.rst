@@ -73,9 +73,9 @@ To create our dripline service, we add another object to the docker-compose defi
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
    :caption: docker-compose.yaml
    :language: yaml
-   :lines: 11-21
+   :lines: 13-28
    :linenos:
-   :lineno-start: 11
+   :lineno-start: 13
 
 Here we're running a container with two files mounted in, the authentications file from the previous section, and a runtime configuration file to be discussed next.
 We also specify the command to run in the container (review the docker compose documentation linked above if you need help understanding the syntax).
@@ -169,9 +169,9 @@ In the minimal case that looks like the following block, in a more production-li
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
    :caption: docker-compose.yaml
    :language: yaml
-   :lines: 38-44
+   :lines: 46-57
    :linenos:
-   :lineno-start: 38
+   :lineno-start: 46
 
 Create the data logging service
 +++++++++++++++++++++++++++++++
@@ -190,9 +190,9 @@ Again, following the same pattern as before, we add the dripline service to exec
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
    :caption: docker-compose.yaml
    :language: yaml
-   :lines: 52-63
+   :lines: 66-83
    :linenos:
-   :lineno-start: 52
+   :lineno-start: 66
 
 Having added these two compose services (``postgres`` and ``sensor-logger``), data will now be stored in the database.
 You can bring the system up as before and watch the ``sensor-logger`` console logs to see data received and being inserted, or connect to the ``postgres`` service and use the ``psql`` command line tool to explore the database content and see new rows populating (you're enouraged to go try both of these on your own, but we'll move along).
@@ -217,9 +217,9 @@ Now we proceed with the compose service:
 .. literalinclude:: ../../examples/first-mesh/docker-compose.yaml
    :caption: docker-compose.yaml
    :language: yaml
-   :lines: 45-50
+   :lines: 59-64
    :linenos:
-   :lineno-start: 45
+   :lineno-start: 59
 
 Note that this configuration binds port 3000 in the container to the same port number on your host machine.
 This will allow us to browse to ``http://localhost:3000`` to view the grafana inteface, you may need to make adjustments based port availability or the networking details of your particular system.
